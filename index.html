@@ -133,19 +133,12 @@
 
         .app-title {
             font-weight: 800;
-            font-size: 1.12rem;
+            font-size: 1.5rem;
             letter-spacing: -0.3px;
             background: linear-gradient(90deg, #ffffff 40%, var(--accent-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             line-height: 1.1;
-        }
-
-        .app-tagline {
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            letter-spacing: 0.2px;
         }
 
         .header-actions {
@@ -629,7 +622,7 @@
             border: 1px solid rgba(0, 210, 255, 0.32);
             box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 210, 255, 0.08);
             background: #07090e;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
 
         /* BARRA / BOTÓN DE ATAJO DE SCROLL */
@@ -977,8 +970,8 @@
            DOSSIER DE AMENAZA SELECCIONADA
            ======================================================== */
         .threat-dossier-card {
-            background: rgba(18, 24, 38, 0.88);
-            border: 1px solid var(--border-medium);
+            background: var(--bg-card, #141010);
+            border: 1px solid var(--border-subtle);
             border-left: 4px solid var(--threat-color, var(--accent-pink));
             border-radius: var(--radius-lg);
             padding: 18px;
@@ -1051,7 +1044,7 @@
         }
 
         .dossier-quote-box {
-            background: rgba(8, 11, 18, 0.7);
+            background: var(--bg-base, #0B0808);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 10px 14px;
@@ -1074,7 +1067,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 16px;
+            margin-bottom: 0;
         }
 
         .dossier-intel-item {
@@ -1130,29 +1123,79 @@
         }
 
         /* ========================================================
-           FEED DE AMENAZAS CERCANAS DETECTADAS
+           LISTADO DESPLEGABLE DE CONTACTOS HOSTILES DETECTADOS
            ======================================================== */
-        .threats-feed-section {
-            margin-bottom: 18px;
+        .threats-feed-accordion {
+            background: var(--bg-card, #141010);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            transition: all 0.2s ease;
         }
 
-        .threats-feed-title {
-            font-size: 0.92rem;
+        .threats-feed-accordion:hover {
+            border-color: rgba(255, 143, 163, 0.45);
+        }
+
+        .threats-feed-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+        }
+
+        .threats-feed-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .threats-summary-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .threats-summary-title {
+            font-size: 0.88rem;
             font-weight: 700;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        }
+
+        .threats-accordion-chevron {
+            font-size: 0.75rem;
+            color: var(--accent-pink);
+            transition: transform 0.25s ease;
+        }
+
+        .threats-feed-accordion[open] .threats-accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .threats-feed-accordion[open] .threats-feed-summary {
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .threats-feed-accordion[open] .threats-summary-title {
+            color: #ffffff;
+        }
+
+        .threats-accordion-content {
+            padding-top: 4px;
         }
 
         .threats-feed-count {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.78rem;
-            color: var(--accent-cyan);
-            background: rgba(0, 210, 255, 0.1);
+            color: #ff8fa3;
+            background: rgba(255, 143, 163, 0.14);
+            border: 1px solid rgba(255, 143, 163, 0.25);
             padding: 2px 8px;
             border-radius: 12px;
         }
@@ -1164,7 +1207,7 @@
         }
 
         .threat-list-item {
-            background: rgba(14, 18, 28, 0.75);
+            background: var(--bg-surface-elevated, #181313);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 12px 14px;
@@ -1178,8 +1221,8 @@
 
         .threat-list-item:hover,
         .threat-list-item.active {
-            border-color: var(--accent-cyan);
-            background: rgba(22, 30, 48, 0.9);
+            border-color: rgba(255, 143, 163, 0.45);
+            background: rgba(255, 143, 163, 0.08);
             transform: translateX(3px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
@@ -2411,7 +2454,6 @@
             </div>
             <div class="brand-text">
                 <div class="app-title">Cupidon´t</div>
-                <!-- <div class="app-tagline">Radar & Videollamada Antiamor</div> -->
             </div>
         </div>
         <div class="header-actions">
@@ -2468,9 +2510,6 @@
                             <button type="button" class="hud-btn" onclick="centrarEnUbicacionUsuario()" title="Centrar mapa en mi ubicación">
                                 <span>🎯</span> Mi Posición
                             </button>
-                            <button type="button" class="hud-btn" id="btn-toggle-sweep" onclick="toggleRadarSweepOverlay()" title="Activar/Desactivar efecto visual de barrido HUD">
-                                <span>💫</span> HUD
-                            </button>
                         </div>
                     </div>
 
@@ -2510,27 +2549,26 @@
                     <div class="radar-sweep-beam" id="radar-sweep-beam"></div>
                 </div>
 
-                <!-- BARRA / BOTÓN DE ATAJO DE SCROLL HACIA DOSSIER -->
-                <div class="radar-scroll-hint-bar" onclick="scrollHaciaDossier()" title="Click para bajar y ver el informe de la amenaza">
-                    <span>📜 Deslizá hacia abajo para ver el Dossier y las 8 Amenazas</span>
-                    <span class="scroll-arrow">⬇️</span>
-                </div>
-
-                <!-- DOSSIER DE LA AMENAZA SELECCIONADA -->
+                <!-- DOSSIER DE LA AMENAZA SELECCIONADA (SIEMPRE VISIBLE) -->
                 <div class="threat-dossier-card" id="threat-dossier-card">
                     <!-- Se inyecta dinámicamente con la amenaza seleccionada -->
                 </div>
 
-                <!-- FEED DE AMENAZAS DETECTADAS EN RADIO -->
-                <div class="threats-feed-section">
-                    <div class="threats-feed-title">
-                        <span>Contactos Hostiles en Radio Cercano</span>
-                        <span class="threats-feed-count" id="threats-feed-count-badge">8 detectados</span>
+                <!-- LISTADO DESPLEGABLE DE CONTACTOS HOSTILES DETECTADOS -->
+                <details class="threats-feed-accordion" id="threats-feed-accordion">
+                    <summary class="threats-feed-summary">
+                        <div class="threats-summary-left">
+                            <span class="threats-summary-title">Contactos Hostiles en Radio Cercano</span>
+                            <span class="threats-feed-count" id="threats-feed-count-badge">8 detectados</span>
+                        </div>
+                        <span class="threats-accordion-chevron">▼</span>
+                    </summary>
+                    <div class="threats-accordion-content">
+                        <div class="threats-list-cards" id="threats-list-cards">
+                            <!-- Inyección de tarjetas de amenazas -->
+                        </div>
                     </div>
-                    <div class="threats-list-cards" id="threats-list-cards">
-                        <!-- Inyección de tarjetas de amenazas -->
-                    </div>
-                </div>
+                </details>
 
                 <!-- TEST CONDUCTUAL CLÁSICO (PRESERVADO EN ACORDEÓN TÁCTICO) -->
                 <details class="tactical-accordion">
@@ -2587,7 +2625,7 @@
         <section id="screen-chat" class="screen">
             <div class="glass-card">
                 <div class="card-header">
-                    <h2><span class="icon-badge">💬</span> Chat Parser (OCR)</h2>
+                    <h2><span class="icon-badge">💬</span> Chat Parser</h2>
                     <p class="card-subtitle">Pegá el mensaje que te mandó para decodificar la manipulación oculta:</p>
                 </div>
 
@@ -2847,7 +2885,7 @@
         </div>
         <div class="nav-item" onclick="switchTab('screen-aura', this)">
             <span class="icon">👁️</span>
-            <span>Aura AR</span>
+            <span>Scanner</span>
         </div>
     </nav>
 
@@ -2928,7 +2966,7 @@
 
         let currentRadarRadius = 500; // 500m | 1500m | 3000m
         let currentThreatFilter = 'todos';
-        let selectedThreatId = "daddy_issues";
+        let selectedThreatId = null;
         let radarSweepEnabled = true;
 
         // Base de datos de amenazas y especímenes detectables en el radar
@@ -3071,7 +3109,10 @@
             }
         ];
 
-        // Estado en memoria de las posiciones calculadas de amenazas
+        // Estado en memoria del ecosistema táctico perimetral
+        let allDiscoveredThreats = [];
+        let maxScannedRadius = 0;
+        let threatInstanceSeq = 0;
         let calculatedThreats = [];
 
         // Generador de audio de radar sintético (Web Audio API)
@@ -3260,7 +3301,7 @@
                         crearMarcadorUsuario();
                     }
 
-                    recalcularPosicionesAmenazas();
+                    recalcularPosicionesAmenazas(true);
                     renderizarAmenazasEnMapa();
                     renderizarFeedAmenazas();
                     actualizarDossierAmenaza(selectedThreatId);
@@ -3308,7 +3349,7 @@
             if (radarMap) {
                 crearMarcadorUsuario();
             }
-            recalcularPosicionesAmenazas();
+            recalcularPosicionesAmenazas(true);
             renderizarAmenazasEnMapa();
             renderizarFeedAmenazas();
             actualizarDossierAmenaza(selectedThreatId);
@@ -3321,29 +3362,96 @@
             return 14;
         }
 
-        // Recalcular posiciones lat/lng de cada amenaza según radio y jitter
-        function recalcularPosicionesAmenazas(randomJitter = false) {
-            calculatedThreats = THREATS_CATALOG.map((t, idx) => {
-                // Jitter aleatorio leve al re-escanear
-                const jitterDist = randomJitter ? (Math.random() * 0.12 - 0.06) : 0;
-                const jitterAngle = randomJitter ? (Math.random() * 20 - 10) : 0;
+        // Crear una instancia de amenaza procedural con coordenadas y datos aleatorios
+        function generarInstanciaAmenaza(distMin, distMax) {
+            threatInstanceSeq++;
+            // Muestreo aleatorio con reemplazo del catálogo de arquetipos (permite 0, 1 o múltiples de cada tipo)
+            const archetype = THREATS_CATALOG[Math.floor(Math.random() * THREATS_CATALOG.length)];
 
-                const ratio = Math.max(0.2, Math.min(0.95, t.ratioDistance + jitterDist));
-                const distanciaMetros = Math.round(currentRadarRadius * ratio);
-                const angulo = (t.bearing + jitterAngle + 360) % 360;
+            // Distancia aleatoria dentro del anillo concéntrico
+            const distanciaMetros = Math.round(distMin + Math.random() * (distMax - distMin));
 
-                const pos = calcularOffsetCoordenadas(userCoords.lat, userCoords.lng, distanciaMetros, angulo);
+            // Orientación aleatoria en 360 grados
+            const angulo = Math.floor(Math.random() * 360);
 
-                return {
-                    ...t,
-                    lat: pos.lat,
-                    lng: pos.lng,
-                    distanciaMetros: distanciaMetros
-                };
-            });
+            // Coordenadas calculadas desde la posición real o táctica del usuario
+            const pos = calcularOffsetCoordenadas(userCoords.lat, userCoords.lng, distanciaMetros, angulo);
 
-            // Ordenar por distancia
+            // Variación aleatoria de peligro (±5%) para dinamismo entre especímenes
+            const jitterPeligro = Math.floor(Math.random() * 11) - 5;
+            const dangerPct = Math.min(99, Math.max(65, archetype.dangerPct + jitterPeligro));
+
+            const uniqueId = `threat_${threatInstanceSeq}_${archetype.id}_${Math.floor(Math.random() * 900 + 100)}`;
+
+            return {
+                ...archetype,
+                id: uniqueId,
+                archetypeId: archetype.id,
+                lat: pos.lat,
+                lng: pos.lng,
+                distanciaMetros: distanciaMetros,
+                bearing: angulo,
+                dangerPct: dangerPct
+            };
+        }
+
+        // Asegurar que las amenazas estén generadas para el radio actual
+        // Preserva las amenazas existentes fijas en GPS y genera nuevas en el sector nuevo al ampliar el radio
+        function asegurarAmenazasParaRadio(radioObjetivo, forzarNuevoEscaneo = false) {
+            let nuevasGeneradas = 0;
+
+            if (forzarNuevoEscaneo || allDiscoveredThreats.length === 0) {
+                allDiscoveredThreats = [];
+                maxScannedRadius = 0;
+            }
+
+            // Anillo 1: Base hasta 500m (genera entre 5 y 8 amenazas aleatorias)
+            if (maxScannedRadius < 500) {
+                const cantidadBase = Math.floor(Math.random() * 4) + 5;
+                for (let i = 0; i < cantidadBase; i++) {
+                    allDiscoveredThreats.push(generarInstanciaAmenaza(70, 480));
+                    nuevasGeneradas++;
+                }
+                maxScannedRadius = 500;
+            }
+
+            // Anillo 2: Expansión de 500m a 1500m (genera entre 6 y 9 nuevas en el nuevo sector revelado)
+            if (radioObjetivo >= 1500 && maxScannedRadius < 1500) {
+                const cantidadAnillo1 = Math.floor(Math.random() * 4) + 6;
+                for (let i = 0; i < cantidadAnillo1; i++) {
+                    allDiscoveredThreats.push(generarInstanciaAmenaza(520, 1460));
+                    nuevasGeneradas++;
+                }
+                maxScannedRadius = 1500;
+            }
+
+            // Anillo 3: Expansión de 1500m a 3000m (genera entre 8 y 12 nuevas en el nuevo sector revelado)
+            if (radioObjetivo >= 3000 && maxScannedRadius < 3000) {
+                const cantidadAnillo2 = Math.floor(Math.random() * 5) + 8;
+                for (let i = 0; i < cantidadAnillo2; i++) {
+                    allDiscoveredThreats.push(generarInstanciaAmenaza(1540, 2940));
+                    nuevasGeneradas++;
+                }
+                maxScannedRadius = 3000;
+            }
+
+            // Filtrar amenazas activas visibles dentro del radio actual
+            calculatedThreats = allDiscoveredThreats.filter(t => t.distanciaMetros <= radioObjetivo);
+
+            // Ordenar por distancia ascendente
             calculatedThreats.sort((a, b) => a.distanciaMetros - b.distanciaMetros);
+
+            // Si la amenaza seleccionada no está dentro del radio visible, seleccionar la más cercana
+            if (!calculatedThreats.some(t => t.id === selectedThreatId) && calculatedThreats.length > 0) {
+                selectedThreatId = calculatedThreats[0].id;
+            }
+
+            return nuevasGeneradas;
+        }
+
+        // Función wrapper de compatibilidad para recalculación de perímetro
+        function recalcularPosicionesAmenazas(forzarNuevoEscaneo = false) {
+            return asegurarAmenazasParaRadio(currentRadarRadius, forzarNuevoEscaneo);
         }
 
         // Renderizar marcadores de amenazas en el mapa Leaflet
@@ -3490,21 +3598,6 @@
                         <strong>🛡️ Protocolo de Evasión Recomendado:</strong> ${threat.protocolo}
                     </div>
                 </div>
-
-                <div class="dossier-actions">
-                    <button type="button" class="dossier-action-btn primary" onclick="activarProtocoloDesdeAmenaza('${threat.shieldAction}')">
-                        <span style="font-size: 1.1rem;">🛡️</span>
-                        <span>Defense Shield</span>
-                    </button>
-                    <button type="button" class="dossier-action-btn" onclick="iniciarCoachingDesdeAmenaza('${threat.coachingId}')">
-                        <span style="font-size: 1.1rem;">📞</span>
-                        <span>Pedir Coaching</span>
-                    </button>
-                    <button type="button" class="dossier-action-btn" onclick="copiarProtocoloAmenaza('${escapeHtml(threat.protocolo)}')">
-                        <span style="font-size: 1.1rem;">📋</span>
-                        <span>Copiar Protocolo</span>
-                    </button>
-                </div>
             `;
         }
 
@@ -3536,6 +3629,7 @@
         // Cambiar radio de búsqueda del radar (500m, 1.5km, 3km)
         function cambiarRadioRadar(metros, btn) {
             sonarPing();
+            const radioAnterior = currentRadarRadius;
             currentRadarRadius = metros;
 
             document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
@@ -3551,12 +3645,18 @@
                 });
             }
 
-            recalcularPosicionesAmenazas();
+            // Preserva las amenazas existentes y genera nuevas en el sector nuevo si el radio aumentó
+            const nuevasAmenazas = asegurarAmenazasParaRadio(metros);
             renderizarAmenazasEnMapa();
             renderizarFeedAmenazas();
             actualizarDossierAmenaza(selectedThreatId);
 
-            mostrarToast(`📡 Radio de radar ajustado a ${metros >= 1000 ? (metros/1000) + ' km' : metros + ' m'}`);
+            if (nuevasAmenazas > 0) {
+                const radioTxt = metros >= 1000 ? (metros / 1000) + ' km' : metros + ' m';
+                mostrarToast(`📡 Radio ampliado a ${radioTxt} (+${nuevasAmenazas} nuevas amenazas detectadas)`);
+            } else {
+                mostrarToast(`📡 Radio de radar ajustado a ${metros >= 1000 ? (metros / 1000) + ' km' : metros + ' m'}`);
+            }
         }
         window.cambiarRadioRadar = cambiarRadioRadar;
 
@@ -3593,30 +3693,17 @@
             }
 
             setTimeout(() => {
-                recalcularPosicionesAmenazas(true);
+                asegurarAmenazasParaRadio(currentRadarRadius, true);
                 renderizarAmenazasEnMapa();
                 renderizarFeedAmenazas();
                 actualizarDossierAmenaza(selectedThreatId);
                 if (scanStatus) scanStatus.innerText = "BARRIDO ACTIVO // 432MHz";
-                mostrarToast("⚡ Perímetro re-escaneado con éxito");
+                mostrarToast("⚡ Perímetro re-escaneado: nuevos contactos generados en zona");
             }, 600);
         }
         window.reescanearPerimetro = reescanearPerimetro;
 
-        // Activar/desactivar overlay de barrido HUD
-        function toggleRadarSweepOverlay() {
-            radarSweepEnabled = !radarSweepEnabled;
-            const sweepBeam = document.getElementById('radar-sweep-beam');
-            const btn = document.getElementById('btn-toggle-sweep');
-            if (sweepBeam) {
-                sweepBeam.classList.toggle('hidden', !radarSweepEnabled);
-            }
-            if (btn) {
-                btn.style.color = radarSweepEnabled ? 'var(--accent-cyan)' : 'var(--text-muted)';
-            }
-            mostrarToast(radarSweepEnabled ? "💫 Efecto HUD activado" : "Efecto HUD desactivado");
-        }
-        window.toggleRadarSweepOverlay = toggleRadarSweepOverlay;
+        // El efecto de barrido HUD se mantiene siempre activo permanentemente en el mapa
 
         // Enlazar amenaza con Defense Shield
         function activarProtocoloDesdeAmenaza(protocoloKey) {
