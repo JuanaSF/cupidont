@@ -976,18 +976,12 @@ textarea:focus, select:focus, input[type="text"]:focus {
 }
 
 .phone-dynamic-island {
-    background: #000000 !important;
-    border-radius: 14px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
-}
-
-.island-camera {
-    background: #151010 !important;
-    border: 1px solid #281D1D !important;
+    display: none !important;
 }
 
 .call-idle-screen {
     background: radial-gradient(circle at 50% 20%, #221316 0%, #0E0A0A 100%) !important;
+    padding: 32px 20px 24px 20px !important;
 }
 
 .call-incoming-name {
@@ -1040,6 +1034,22 @@ textarea:focus, select:focus, input[type="text"]:focus {
     font-weight: 400;
 }
 
+.btn-call-icon-wrap {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #00E676 !important;
+    filter: drop-shadow(0 0 6px rgba(0, 230, 118, 0.75)) !important;
+    margin-right: 4px !important;
+}
+
+.btn-call-icon-wrap svg {
+    width: 19px !important;
+    height: 19px !important;
+    fill: #00E676 !important;
+    display: block !important;
+}
+
 .btn-shuffle-call {
     background: var(--bg-pill) !important;
     border: 1px solid var(--border-subtle) !important;
@@ -1060,6 +1070,89 @@ textarea:focus, select:focus, input[type="text"]:focus {
     background: rgba(14, 10, 10, 0.9) !important;
     border: 1px solid var(--border-subtle) !important;
     border-radius: var(--radius-full) !important;
+}
+
+/* ==========================================================================
+   ESTADO: LLAMADA FINALIZADA & BÚSQUEDA DE NUEVO COACH
+   ========================================================================== */
+.call-finished-screen {
+    background: radial-gradient(circle at 50% 20%, #221316 0%, #0E0A0A 100%) !important;
+    padding: 32px 20px 24px 20px !important;
+}
+
+.call-finished-tag {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.18em !important;
+    color: var(--accent-rose) !important;
+    text-transform: uppercase !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    margin-bottom: 6px !important;
+}
+
+.finished-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent-rose);
+    box-shadow: 0 0 10px var(--accent-rose);
+}
+
+.call-reminder-badge {
+    font-family: var(--font-mono) !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.14em !important;
+    color: var(--accent-rose) !important;
+    text-transform: uppercase !important;
+    margin-bottom: 8px !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 143, 163, 0.12) !important;
+    border: 1px solid rgba(255, 143, 163, 0.3) !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+}
+
+.call-quote-reminder {
+    margin-bottom: 20px !important;
+    border-color: rgba(255, 143, 163, 0.35) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 143, 163, 0.08) !important;
+}
+
+.btn-another-call {
+    min-width: 230px !important;
+    transition: all 0.25s ease !important;
+}
+
+.btn-another-call.searching {
+    background: var(--accent-primary-gradient) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px rgba(230, 57, 86, 0.55), 0 0 20px rgba(255, 143, 163, 0.4) !important;
+    cursor: wait !important;
+    animation: searchingThrob 1.2s infinite ease-in-out !important;
+}
+
+.btn-another-call.searching::after {
+    content: "" !important;
+}
+
+@keyframes searchingThrob {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px rgba(255, 143, 163, 0.25);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 28px rgba(255, 143, 163, 0.55);
+    }
 }
 
 /* ==========================================================================

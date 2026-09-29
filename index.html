@@ -1678,6 +1678,7 @@
             width: 100%;
             height: 100%;
             border: 0;
+            pointer-events: none;
         }
 
         .call-active-overlay {
@@ -2685,12 +2686,6 @@
                 
                 <!-- SMARTPHONE / TELÉFONO VERTICAL -->
                 <div class="phone-mockup-frame">
-                    
-                    <!-- NOTCH SUPERIOR -->
-                    <div class="phone-dynamic-island">
-                        <div class="island-camera"></div>
-                        <div class="island-sensor"></div>
-                    </div>
 
                     <!-- ESTADO 1: LLAMADA ENTRANTE (EL VIDEO NO SE REPRODUCE HASTA ATENDER) -->
                     <div class="call-idle-screen" id="call-idle-screen">
@@ -2715,7 +2710,12 @@
                             </div>
 
                             <button class="btn-start-call" onclick="iniciarVideollamada()">
-                                📞 Atender Videollamada
+                                <span class="btn-call-icon-wrap" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor">
+                                        <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1v3.49a1 1 0 01-1 1C10.02 21 3 13.98 3 4.99a1 1 0 011-1H7.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.24 1.02l-2.21 2.21z"/>
+                                    </svg>
+                                </span>
+                                <span>Atender Videollamada</span>
                             </button>
 
                             <button class="btn-shuffle-call" onclick="cambiarCoachAleatorio()">
@@ -2774,6 +2774,35 @@
 
                         </div>
 
+                    </div>
+
+                    <!-- ESTADO 3: LLAMADA FINALIZADA (RECORDATORIO DE FRASE + BOTÓN HACER OTRA LLAMADA) -->
+                    <div class="call-idle-screen call-finished-screen hidden" id="call-finished-screen">
+                        <div>
+                            <div class="call-incoming-tag call-finished-tag">
+                                <span class="finished-status-dot">●</span> LLAMADA FINALIZADA
+                            </div>
+                            <div class="call-incoming-name" id="finished-coach-name">Locomotora Oliveras</div>
+                            <div class="call-incoming-desc" id="finished-coach-specialty">Motivación Extrema & Dignidad</div>
+                        </div>
+
+                        <!-- AVATAR DEL COACH -->
+                        <div class="call-avatar-pulse-wrapper">
+                            <div class="call-avatar-circle" id="finished-coach-avatar">🥊</div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; align-items:center; width:100%;">
+                            <div class="call-reminder-badge">
+                                <span>💡 RECORDATORIO PARA PRACTICAR</span>
+                            </div>
+                            <div class="call-quote-preview call-quote-reminder" id="finished-coach-quote">
+                                "¡¡DESPERTATE LOCO!! ¡¡SI QUERÉS QUE TE QUIERAN, QUERETE VOS PRIMERO!!"
+                            </div>
+
+                            <button class="btn-start-call btn-another-call" id="btn-another-call" onclick="hacerOtraLlamadaCoaching()">
+                                <span id="another-call-label">Hacer otra llamada</span>
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -4625,13 +4654,23 @@
                         startSeconds: 0
                     });
                     ytPlayer.playVideo();
+                    try {
+                        if (ytPlayer.unloadModule) {
+                            ytPlayer.unloadModule('captions');
+                            ytPlayer.unloadModule('cc');
+                        }
+                        if (ytPlayer.setOption) {
+                            ytPlayer.setOption('captions', 'track', {});
+                            ytPlayer.setOption('cc', 'track', {});
+                        }
+                    } catch(e) {}
                     return;
                 } catch(e) {
                     console.warn("Reinstanciando ytPlayer:", e);
                 }
             }
 
-            // Si la API de YT está disponible creamos el reproductor
+            // Si la API de YT está disponible creamos el reproductor sin controles ni subtítulos
             if (window.YT && window.YT.Player) {
                 try {
                     ytPlayer = new YT.Player('call-youtube-player', {
@@ -4640,16 +4679,31 @@
                         height: '100%',
                         playerVars: {
                             autoplay: 1,
-                            controls: 1,
-                            playsinline: 1,
+                            controls: 0,
+                            disablekb: 1,
+                            fs: 0,
                             rel: 0,
                             modestbranding: 1,
+                            iv_load_policy: 3,
+                            cc_load_policy: 0,
+                            cc_lang_pref: '',
+                            playsinline: 1,
                             enablejsapi: 1,
                             origin: window.location.origin
                         },
                         events: {
                             'onReady': function(e) {
                                 e.target.playVideo();
+                                try {
+                                    if (e.target.unloadModule) {
+                                        e.target.unloadModule('captions');
+                                        e.target.unloadModule('cc');
+                                    }
+                                    if (e.target.setOption) {
+                                        e.target.setOption('captions', 'track', {});
+                                        e.target.setOption('cc', 'track', {});
+                                    }
+                                } catch(err) {}
                             },
                             'onStateChange': onPlayerStateChange
                         }
@@ -4660,16 +4714,16 @@
                 }
             }
 
-            // Fallback iframe directo con enablejsapi si la API externa aún no cargó
+            // Fallback iframe directo sin controles ni subtítulos si la API externa aún no cargó
             const container = document.getElementById('call-youtube-player');
             if (container) {
                 container.innerHTML = `
                     <iframe id="call-yt-iframe"
-                        src="https://www.youtube-nocookie.com/embed/${videoActual.youtubeId}?autoplay=1&enablejsapi=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(window.location.origin)}"
+                        src="https://www.youtube-nocookie.com/embed/${videoActual.youtubeId}?autoplay=1&controls=0&disablekb=1&fs=0&rel=0&modestbranding=1&iv_load_policy=3&cc_load_policy=0&enablejsapi=1&playsinline=1&origin=${encodeURIComponent(window.location.origin)}"
                         title="Videollamada Coaching"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen
-                        style="width:100%;height:100%;border:0;">
+                        style="width:100%;height:100%;border:0;pointer-events:none;">
                     </iframe>
                 `;
             }
@@ -4762,10 +4816,27 @@
         // ==========================================
         // CONTROL DE VIDEOLLAMADA
         // ==========================================
+        let coachFinalizado = null;
+        let busquedaCoachTimeout = null;
+        let busquedaCoachInterval = null;
+
         function iniciarVideollamada() {
+            if (busquedaCoachTimeout) {
+                clearTimeout(busquedaCoachTimeout);
+                busquedaCoachTimeout = null;
+            }
+            if (busquedaCoachInterval) {
+                clearInterval(busquedaCoachInterval);
+                busquedaCoachInterval = null;
+            }
+
             llamadaEnCurso = true;
 
-            document.getElementById('call-idle-screen').classList.add('hidden');
+            const idleScreen = document.getElementById('call-idle-screen');
+            if (idleScreen) idleScreen.classList.add('hidden');
+
+            const finishedScreen = document.getElementById('call-finished-screen');
+            if (finishedScreen) finishedScreen.classList.add('hidden');
 
             reproducirVideoActual();
             activarCamaraWeb();
@@ -4789,18 +4860,103 @@
 
             apagarCamaraWeb();
 
-            document.getElementById('call-idle-screen').classList.remove('hidden');
+            // Guardamos el coach que acaba de dar la sesión para mostrar su frase en el recordatorio
+            coachFinalizado = videoActual || videosCoaching[0];
+
+            // Inyectamos los datos del coach y su frase en la pantalla de llamada finalizada
+            const finName = document.getElementById('finished-coach-name');
+            const finSpec = document.getElementById('finished-coach-specialty');
+            const finAvatar = document.getElementById('finished-coach-avatar');
+            const finQuote = document.getElementById('finished-coach-quote');
+
+            if (finName) finName.innerText = coachFinalizado.coach;
+            if (finSpec) finSpec.innerText = coachFinalizado.especialidad;
+            if (finAvatar) finAvatar.innerText = coachFinalizado.emoji;
+            if (finQuote) finQuote.innerText = `"${coachFinalizado.frase}"`;
+
+            // Resetear el botón "Hacer otra llamada"
+            const btnOtra = document.getElementById('btn-another-call');
+            const labelOtra = document.getElementById('another-call-label');
+            if (btnOtra) {
+                btnOtra.classList.remove('searching');
+                btnOtra.removeAttribute('disabled');
+            }
+            if (labelOtra) {
+                labelOtra.innerText = "Hacer otra llamada";
+            }
+
+            // Ocultar pantalla de llamada entrante y mostrar pantalla de llamada finalizada
+            const idleScreen = document.getElementById('call-idle-screen');
+            if (idleScreen) idleScreen.classList.add('hidden');
+
+            const finishedScreen = document.getElementById('call-finished-screen');
+            if (finishedScreen) {
+                finishedScreen.classList.remove('hidden');
+            }
 
             if (terminoVideo) {
-                mostrarToast(`📞 ${videoActual.coach} cortó la llamada. ¡Tomá nota del consejo!`);
+                mostrarToast(`📞 ${coachFinalizado.coach} finalizó la sesión. ¡Recordá su lección!`);
             } else {
                 mostrarToast("Llamada finalizada");
             }
-
-            // Seleccionar aleatoriamente el próximo video para la siguiente llamada
-            seleccionarVideoAleatorio(videoActual ? videoActual.id : null);
         }
         window.colgarVideollamada = colgarVideollamada;
+
+        function hacerOtraLlamadaCoaching() {
+            const btnOtra = document.getElementById('btn-another-call');
+            const labelOtra = document.getElementById('another-call-label');
+
+            if (btnOtra) {
+                btnOtra.classList.add('searching');
+                btnOtra.setAttribute('disabled', 'true');
+            }
+
+            let segRestantes = 3;
+            if (labelOtra) {
+                labelOtra.innerText = `Buscando nuevo coach... ${segRestantes}s`;
+            }
+
+            mostrarToast("🔍 Buscando nuevo coach...");
+
+            if (busquedaCoachInterval) clearInterval(busquedaCoachInterval);
+            busquedaCoachInterval = setInterval(() => {
+                segRestantes--;
+                if (segRestantes > 0) {
+                    if (labelOtra) labelOtra.innerText = `Buscando nuevo coach... ${segRestantes}s`;
+                } else {
+                    clearInterval(busquedaCoachInterval);
+                    busquedaCoachInterval = null;
+                }
+            }, 1000);
+
+            if (busquedaCoachTimeout) clearTimeout(busquedaCoachTimeout);
+            busquedaCoachTimeout = setTimeout(() => {
+                // 1. Seleccionar un nuevo coach diferente al anterior
+                seleccionarVideoAleatorio(coachFinalizado ? coachFinalizado.id : (videoActual ? videoActual.id : null));
+
+                // 2. Ocultar pantalla de llamada finalizada
+                const finishedScreen = document.getElementById('call-finished-screen');
+                if (finishedScreen) {
+                    finishedScreen.classList.add('hidden');
+                }
+
+                // 3. Restaurar botón de otra llamada
+                if (btnOtra) {
+                    btnOtra.classList.remove('searching');
+                    btnOtra.removeAttribute('disabled');
+                }
+                if (labelOtra) labelOtra.innerText = "Hacer otra llamada";
+
+                // 4. Mostrar pantalla de llamada entrante con el nuevo coach
+                const idleScreen = document.getElementById('call-idle-screen');
+                if (idleScreen) {
+                    idleScreen.classList.remove('hidden');
+                }
+
+                mostrarToast(`📞 ¡Llamada entrante de ${videoActual.coach}!`);
+            }, 3000);
+        }
+        window.hacerOtraLlamadaCoaching = hacerOtraLlamadaCoaching;
 
         function toggleMute() {
             const btn = document.getElementById('btn-call-mute');
