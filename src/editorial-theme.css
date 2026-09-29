@@ -186,27 +186,33 @@ header {
 .brand-icon {
     width: 36px !important;
     height: 36px !important;
-    background: rgba(230, 57, 86, 0.14) !important;
-    border: 1px solid rgba(255, 143, 163, 0.35) !important;
-    box-shadow: 0 4px 14px rgba(230, 57, 86, 0.3) !important;
-    border-radius: 10px !important;
-    display: flex !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    padding: 3px !important;
-    transition: transform 0.2s ease, border-color 0.2s ease !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .brand-icon:hover {
-    transform: scale(1.06) !important;
-    border-color: rgba(255, 143, 163, 0.6) !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .brand-icon img {
     width: 100% !important;
     height: 100% !important;
     object-fit: contain !important;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)) !important;
+    filter: drop-shadow(0 2px 8px rgba(230, 57, 86, 0.4)) !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.brand-icon:hover img {
+    transform: scale(1.14) rotate(-4deg) !important;
 }
 
 .panic-header-btn {
