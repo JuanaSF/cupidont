@@ -1,0 +1,1123 @@
+/* ==========================================================================
+   ESTÉTICA DARK EDITORIAL / NEO-ROMÁNTICA (DESIGN SYSTEM TOKENS & HOVER)
+   Inspirado en la dirección de arte LovePage.io
+   ========================================================================== */
+
+:root {
+    /* 1. SISTEMA DE COLOR (DESIGN TOKENS) */
+    --bg-base: #0B0808;
+    --bg-base-warm: #0E0A0A;
+    --bg-card: #141010;
+    --bg-card-glass: rgba(20, 16, 16, 0.88);
+    --bg-pill: #181313;
+    --bg-pill-hover: #221A1A;
+    --bg-ambient-glow: radial-gradient(ellipse at top, rgba(180, 40, 60, 0.14) 0%, transparent 70%);
+
+    /* Bordes y Líneas divisoras (Color rosado editorial solicitado) */
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --border-card: #261E1E;
+    --border-medium: rgba(255, 143, 163, 0.25);
+    --border-focus: rgba(255, 143, 163, 0.45);
+    --border-hover-rose: rgba(255, 143, 163, 0.45);
+
+    /* Acentos y Marcas (Brand Colors) */
+    --accent-primary: #E63956;
+    --accent-primary-gradient: linear-gradient(135deg, #E63956 0%, #F2546D 100%);
+    --accent-primary-glow: rgba(230, 57, 86, 0.35);
+    --accent-secondary: #D1495B;
+    --accent-coral: #F2546D;
+    --accent-rose: #ff8fa3;
+    --accent-wine: #872338;
+    --accent-pink: #E63956;
+    --accent-pink-glow: rgba(230, 57, 86, 0.35);
+    --accent-cyan: #ff8fa3;
+    --accent-cyan-glow: rgba(255, 143, 163, 0.35);
+    --accent-green: #34D399;
+    --accent-gold: #F59E0B;
+
+    /* Tipografía (Text Colors) */
+    --text-primary: #FFFFFF;
+    --text-secondary: #B3A8A8;
+    --text-muted: #665E5E;
+    --text-accent: #E64A62;
+    --text-rose: #ff8fa3;
+
+    /* Tipografía (Google Fonts) */
+    --font-serif: 'Playfair Display', 'Instrument Serif', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+}
+
+/* ==========================================================================
+   RESET & BASE VIEWPORT
+   ========================================================================== */
+html {
+    background-color: var(--bg-base) !important;
+}
+
+body {
+    background-color: var(--bg-base) !important;
+    color: var(--text-primary) !important;
+    font-family: var(--font-sans) !important;
+    background-image: 
+        radial-gradient(ellipse at top, rgba(180, 40, 60, 0.16) 0%, transparent 70%),
+        radial-gradient(circle at 85% 90%, rgba(135, 35, 56, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 10% 40%, rgba(230, 57, 86, 0.04) 0%, transparent 40%) !important;
+    background-attachment: fixed !important;
+}
+
+/* ==========================================================================
+   TIPOGRAFÍA Y ESTILO EDITORIAL
+   ========================================================================== */
+h1, h2, .app-title, .panic-title, .call-incoming-name, .aura-result-title {
+    font-family: var(--font-serif) !important;
+    letter-spacing: -0.02em !important;
+}
+
+.card-header h2 {
+    font-family: var(--font-serif) !important;
+    font-size: 1.55rem !important;
+    font-weight: 500 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.25 !important;
+}
+
+.card-header h2 span.icon-badge {
+    background: rgba(255, 143, 163, 0.12) !important;
+    color: var(--accent-rose) !important;
+    border: 1px solid rgba(255, 143, 163, 0.25) !important;
+    border-radius: 10px !important;
+}
+
+.card-subtitle {
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    color: var(--text-secondary) !important;
+    font-weight: 400 !important;
+}
+
+label {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--text-muted) !important;
+    margin-bottom: 8px !important;
+}
+
+.threats-feed-title {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--text-muted) !important;
+}
+
+.radar-live-indicator {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.18em !important;
+    color: var(--accent-rose) !important;
+    text-transform: uppercase !important;
+}
+
+.radar-live-dot {
+    background-color: var(--accent-rose) !important;
+    box-shadow: 0 0 10px var(--accent-rose) !important;
+}
+
+.call-incoming-tag {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.18em !important;
+    color: var(--accent-rose) !important;
+    text-transform: uppercase !important;
+}
+
+.risk-label {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.18em !important;
+    color: var(--text-muted) !important;
+}
+
+/* ==========================================================================
+   HEADER SUPERIOR
+   ========================================================================== */
+header {
+    background: rgba(14, 10, 10, 0.88) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.app-title {
+    font-family: var(--font-serif) !important;
+    font-weight: 600 !important;
+    font-size: 1.28rem !important;
+    letter-spacing: -0.02em !important;
+    background: linear-gradient(90deg, #FFFFFF 60%, var(--accent-rose) 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+.app-tagline {
+    font-family: var(--font-sans) !important;
+    font-size: 0.72rem !important;
+    font-weight: 500 !important;
+    color: var(--text-muted) !important;
+    letter-spacing: 0.05em !important;
+}
+
+.brand-icon {
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(230, 57, 86, 0.14) !important;
+    border: 1px solid rgba(255, 143, 163, 0.35) !important;
+    box-shadow: 0 4px 14px rgba(230, 57, 86, 0.3) !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 3px !important;
+    transition: transform 0.2s ease, border-color 0.2s ease !important;
+}
+
+.brand-icon:hover {
+    transform: scale(1.06) !important;
+    border-color: rgba(255, 143, 163, 0.6) !important;
+}
+
+.brand-icon img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4)) !important;
+}
+
+.panic-header-btn {
+    background: rgba(255, 143, 163, 0.12) !important;
+    color: var(--accent-rose) !important;
+    border: 1px solid rgba(255, 143, 163, 0.35) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    font-size: 0.8rem !important;
+    box-shadow: 0 2px 10px rgba(255, 143, 163, 0.15) !important;
+}
+
+.panic-header-btn:hover {
+    background: rgba(255, 143, 163, 0.22) !important;
+    border-color: rgba(255, 143, 163, 0.55) !important;
+    box-shadow: 0 0 15px rgba(255, 143, 163, 0.35) !important;
+}
+
+/* ==========================================================================
+   CONTENEDOR GLOBAL & ESPACIADO VERTICAL
+   ========================================================================== */
+main {
+    padding: 24px 20px calc(var(--nav-height) + 64px) 20px !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(255, 143, 163, 0.4) var(--bg-base) !important;
+}
+
+main::-webkit-scrollbar-track {
+    background: var(--bg-base) !important;
+}
+
+main::-webkit-scrollbar-thumb {
+    background: rgba(255, 143, 163, 0.4) !important;
+    border: 1px solid var(--border-subtle) !important;
+}
+
+.screen {
+    max-width: 1040px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding-bottom: 32px !important;
+}
+
+/* ==========================================================================
+   TARJETAS BENTO & SUPERFICIES ELEVADAS (HOVER ROSADO SOLICITADO)
+   ========================================================================== */
+.glass-card,
+.lp-card {
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 24px 26px !important;
+    margin-bottom: 24px !important;
+    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+/* Exact hover color requested by user: rgba(255, 143, 163, .45) */
+.glass-card:hover,
+.lp-card:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.85), 0 0 24px rgba(255, 143, 163, 0.12) !important;
+}
+
+/* ==========================================================================
+   BOTÓN PRIMARIO (HERO CTA & ACTIONS)
+   ========================================================================== */
+button.btn-primary {
+    background: var(--accent-primary-gradient) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 12px 28px !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px -3px var(--accent-primary-glow) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+button.btn-primary::after {
+    content: "→";
+    font-family: var(--font-sans);
+    font-weight: 400;
+    transition: transform 0.2s ease;
+    margin-left: 2px;
+}
+
+button.btn-primary:hover {
+    filter: brightness(1.08) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 24px -2px rgba(255, 143, 163, 0.5) !important;
+    border-color: rgba(255, 143, 163, 0.6) !important;
+}
+
+button.btn-primary:hover::after {
+    transform: translateX(4px);
+}
+
+button.btn-primary:active {
+    transform: scale(0.98) !important;
+}
+
+/* BOTÓN SECUNDARIO */
+button.btn-secondary {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 11px 22px !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.2s ease !important;
+}
+
+button.btn-secondary:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.10) !important;
+    box-shadow: 0 0 16px rgba(255, 143, 163, 0.15) !important;
+}
+
+/* ==========================================================================
+   CHIPS & FILTROS DE CATEGORÍAS (PILLS CON HOVER ROSADO)
+   ========================================================================== */
+.threat-filter-chip {
+    border-radius: var(--radius-full) !important;
+    padding: 6px 14px !important;
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+}
+
+.threat-filter-chip::after {
+    content: " →";
+    opacity: 0.55;
+    margin-left: 4px;
+    font-size: 11px;
+}
+
+.threat-filter-chip:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.12) !important;
+    box-shadow: 0 0 12px rgba(255, 143, 163, 0.18) !important;
+}
+
+.threat-filter-chip.active {
+    background: rgba(255, 143, 163, 0.18) !important;
+    border-color: rgba(255, 143, 163, 0.6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(255, 143, 163, 0.25) !important;
+}
+
+/* Selector de radio pills */
+.radar-radius-selector {
+    background: var(--bg-base) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-full) !important;
+    padding: 3px 6px !important;
+}
+
+.radius-btn {
+    border-radius: var(--radius-full) !important;
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+    font-family: var(--font-mono) !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.2s ease !important;
+}
+
+.radius-btn:hover {
+    color: #ffffff !important;
+    border-color: rgba(255, 143, 163, 0.35) !important;
+}
+
+.radius-btn.active {
+    background: var(--accent-primary) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--accent-primary) !important;
+    box-shadow: 0 0 12px rgba(230, 57, 86, 0.4) !important;
+}
+
+/* Hud action buttons */
+.hud-btn {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-full) !important;
+    color: var(--text-secondary) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    padding: 6px 14px !important;
+    transition: all 0.2s ease !important;
+}
+
+.hud-btn:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.12) !important;
+    box-shadow: 0 0 14px rgba(255, 143, 163, 0.2) !important;
+}
+
+.hud-btn.primary {
+    background: rgba(255, 143, 163, 0.15) !important;
+    border-color: rgba(255, 143, 163, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.hud-btn.primary:hover {
+    border-color: rgba(255, 143, 163, 0.65) !important;
+    box-shadow: 0 0 14px rgba(255, 143, 163, 0.4) !important;
+}
+
+/* Sample pills (Chat parser) */
+.sample-pill {
+    border-radius: var(--radius-full) !important;
+    padding: 6px 14px !important;
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.2s ease !important;
+}
+
+.sample-pill::after {
+    content: " →";
+    opacity: 0.55;
+    margin-left: 3px;
+}
+
+.sample-pill:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.10) !important;
+    box-shadow: 0 0 12px rgba(255, 143, 163, 0.18) !important;
+}
+
+/* Protocol chips (Defense Shield) */
+.protocol-chip {
+    border-radius: var(--radius-full) !important;
+    padding: 10px 18px !important;
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.2s ease !important;
+}
+
+.protocol-chip:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.10) !important;
+    box-shadow: 0 0 14px rgba(255, 143, 163, 0.2) !important;
+}
+
+.protocol-chip.active {
+    background: rgba(255, 143, 163, 0.18) !important;
+    border-color: rgba(255, 143, 163, 0.6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 16px rgba(255, 143, 163, 0.25) !important;
+}
+
+/* Status pills */
+.radar-status-bar {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.radar-gps-pill {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-secondary) !important;
+    border-radius: var(--radius-full) !important;
+    font-size: 12px !important;
+    transition: border-color 0.2s ease !important;
+}
+
+.radar-gps-pill:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.radar-danger-pill {
+    background: rgba(209, 73, 91, 0.14) !important;
+    border: 1px solid rgba(209, 73, 91, 0.3) !important;
+    color: var(--accent-secondary) !important;
+    border-radius: var(--radius-full) !important;
+    font-size: 12px !important;
+}
+
+/* ==========================================================================
+   ACORDEÓN FAQ & DETAILS
+   ========================================================================== */
+.tactical-accordion {
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px solid var(--border-subtle) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    border-radius: 0 !important;
+    padding: 18px 0 !important;
+    margin-top: 18px !important;
+}
+
+.tactical-accordion summary {
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    transition: color 0.2s ease !important;
+}
+
+.tactical-accordion summary:hover {
+    color: #ff8fa3 !important;
+}
+
+.tactical-accordion[open] summary {
+    border-bottom: 1px solid var(--border-subtle) !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 16px !important;
+}
+
+/* ==========================================================================
+   INPUTS, TEXTAREA Y CONTROLES (FOCUS ROSADO)
+   ========================================================================== */
+textarea, select, input[type="text"] {
+    background: var(--bg-base) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
+}
+
+textarea:focus, select:focus, input[type="text"]:focus {
+    border-color: rgba(255, 143, 163, 0.55) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 0 3px rgba(255, 143, 163, 0.22) !important;
+}
+
+/* RESULT BOXES */
+.result-box {
+    background: var(--bg-base-warm) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-left: 3px solid var(--accent-primary) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 16px 20px !important;
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+    color: var(--text-secondary) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.result-box strong {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+}
+
+/* CHECKBOXES TÁCTICOS */
+.checkbox-card {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 12px 16px !important;
+    transition: all 0.2s ease !important;
+}
+
+.checkbox-card:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    background: rgba(255, 143, 163, 0.08) !important;
+}
+
+.checkbox-card input[type="checkbox"] {
+    accent-color: var(--accent-primary) !important;
+}
+
+.checkbox-text {
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+}
+
+/* RISK GAUGE & NÚMEROS DE PASOS */
+.risk-gauge-container {
+    background: var(--bg-base) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.risk-bar-track {
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.risk-bar-fill {
+    background: linear-gradient(90deg, var(--accent-wine), var(--accent-secondary), var(--accent-coral)) !important;
+}
+
+.risk-score-value {
+    font-family: var(--font-serif) !important;
+    font-style: italic !important;
+    font-weight: 600 !important;
+    font-size: 1.25rem !important;
+    color: var(--accent-coral) !important;
+}
+
+/* ==========================================================================
+   RADAR TÁCTICO & MAPA LEAFLET EN MODO DARK EDITORIAL (SIN AZUL ELÉCTRICO)
+   ========================================================================== */
+.tactical-map-container {
+    background: var(--bg-base) !important;
+    border: 1px solid rgba(255, 143, 163, 0.3) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.85), 0 0 20px rgba(255, 143, 163, 0.06) !important;
+    transition: border-color 0.25s ease !important;
+}
+
+.tactical-map-container:hover {
+    border-color: rgba(255, 143, 163, 0.5) !important;
+}
+
+#tactical-leaflet-map {
+    background: var(--bg-base) !important;
+}
+
+.leaflet-container {
+    background: var(--bg-base) !important;
+    font-family: var(--font-sans) !important;
+}
+
+/* Filtro elegante para OpenStreetMap que armoniza con la estética cálida/vino */
+.tactical-osm-tiles {
+    filter: brightness(0.55) invert(1) contrast(1.25) hue-rotate(330deg) saturate(0.25) !important;
+}
+
+.leaflet-tile {
+    background-color: var(--bg-base) !important;
+}
+
+.leaflet-control-zoom {
+    background: rgba(20, 16, 16, 0.9) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 8px !important;
+}
+
+.leaflet-control-zoom a {
+    background: rgba(20, 16, 16, 0.9) !important;
+    color: #ff8fa3 !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background: rgba(255, 143, 163, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.leaflet-control-attribution {
+    background: rgba(11, 8, 8, 0.8) !important;
+    color: var(--text-muted) !important;
+}
+
+.radar-scroll-hint-bar {
+    background: rgba(255, 143, 163, 0.08) !important;
+    border: 1px solid rgba(255, 143, 163, 0.28) !important;
+    border-radius: var(--radius-full) !important;
+    color: #ff8fa3 !important;
+    transition: all 0.2s ease !important;
+}
+
+.radar-scroll-hint-bar:hover {
+    background: rgba(255, 143, 163, 0.18) !important;
+    border-color: rgba(255, 143, 163, 0.55) !important;
+}
+
+.hud-corner {
+    border-color: rgba(255, 143, 163, 0.55) !important;
+}
+
+.hud-coordinates-pill {
+    background: rgba(14, 10, 10, 0.9) !important;
+    border: 1px solid rgba(255, 143, 163, 0.3) !important;
+    color: #ff8fa3 !important;
+}
+
+.hud-scan-mode {
+    background: rgba(14, 10, 10, 0.9) !important;
+    border: 1px solid rgba(255, 143, 163, 0.3) !important;
+    color: #ff8fa3 !important;
+}
+
+.radar-sweep-beam {
+    background: conic-gradient(
+        from 0deg,
+        rgba(255, 143, 163, 0.24) 0deg,
+        rgba(255, 143, 163, 0.06) 32deg,
+        transparent 70deg,
+        transparent 360deg
+    ) !important;
+}
+
+.radar-rings-overlay {
+    border: 1px dashed rgba(255, 143, 163, 0.22) !important;
+}
+
+.radar-rings-overlay::before {
+    border: 1px dotted rgba(255, 143, 163, 0.28) !important;
+}
+
+/* Marcador usuario */
+.user-beacon-pulse {
+    border: 1.5px solid #ff8fa3 !important;
+    background: rgba(255, 143, 163, 0.25) !important;
+}
+
+.user-beacon-core {
+    background: #ff8fa3 !important;
+    box-shadow: 0 0 14px #ff8fa3 !important;
+    border: 2px solid #ffffff !important;
+}
+
+.user-beacon-label {
+    background: var(--bg-card) !important;
+    color: #ff8fa3 !important;
+    border: 1px solid rgba(255, 143, 163, 0.45) !important;
+}
+
+/* ==========================================================================
+   DOSSIER & TARJETAS DE AMENAZAS (HOVER ROSADO)
+   ========================================================================== */
+.threat-dossier-card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-left: 3px solid var(--accent-primary) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 22px !important;
+    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.8) !important;
+    transition: border-color 0.25s ease !important;
+}
+
+.threat-dossier-card:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+}
+
+.dossier-name {
+    font-family: var(--font-serif) !important;
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.01em !important;
+}
+
+.dossier-distance {
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+    color: var(--text-secondary) !important;
+}
+
+.dossier-quote-box {
+    background: var(--bg-base) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-serif) !important;
+    font-style: italic !important;
+    color: var(--text-secondary) !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+}
+
+.dossier-intel-item {
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.6 !important;
+}
+
+.dossier-action-btn {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    color: var(--text-secondary) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.dossier-action-btn:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.12) !important;
+    box-shadow: 0 0 14px rgba(255, 143, 163, 0.2) !important;
+}
+
+.dossier-action-btn.primary {
+    background: rgba(230, 57, 86, 0.2) !important;
+    border-color: rgba(230, 57, 86, 0.45) !important;
+    color: #ffffff !important;
+}
+
+.dossier-action-btn.primary:hover {
+    border-color: rgba(255, 143, 163, 0.6) !important;
+    box-shadow: 0 0 14px rgba(255, 143, 163, 0.4) !important;
+}
+
+/* Feed de amenazas en lista */
+.threat-list-item {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 12px 16px !important;
+    transition: all 0.2s ease !important;
+}
+
+.threat-list-item:hover,
+.threat-list-item.active {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    background: rgba(255, 143, 163, 0.08) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 16px rgba(255, 143, 163, 0.12) !important;
+}
+
+.threat-item-name {
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+}
+
+.threat-item-meta {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    color: var(--text-muted) !important;
+}
+
+.threats-feed-count {
+    font-family: var(--font-mono) !important;
+    font-size: 11px !important;
+    color: #ff8fa3 !important;
+    background: rgba(255, 143, 163, 0.14) !important;
+    border-radius: var(--radius-full) !important;
+}
+
+/* ==========================================================================
+   VIDEOLLAMADA (TELÉFONO SMARTPHONE HIGH-END MOCKUP)
+   ========================================================================== */
+.phone-mockup-frame {
+    background-color: #0E0A0A !important;
+    border-radius: 42px !important;
+    border: 4px solid #261E1E !important;
+    box-shadow: 
+        0 25px 60px -15px rgba(0, 0, 0, 0.95),
+        0 0 45px rgba(230, 57, 86, 0.12),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+}
+
+.phone-dynamic-island {
+    background: #000000 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+}
+
+.island-camera {
+    background: #151010 !important;
+    border: 1px solid #281D1D !important;
+}
+
+.call-idle-screen {
+    background: radial-gradient(circle at 50% 20%, #221316 0%, #0E0A0A 100%) !important;
+}
+
+.call-incoming-name {
+    font-family: var(--font-serif) !important;
+    font-size: 1.75rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+    color: #ffffff !important;
+}
+
+.call-incoming-desc {
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    font-style: italic !important;
+    color: var(--accent-rose) !important;
+}
+
+.call-avatar-circle {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-wine)) !important;
+    border: 3px solid rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 35px var(--accent-primary-glow) !important;
+}
+
+.pulse-wave {
+    background: rgba(255, 143, 163, 0.25) !important;
+}
+
+.call-quote-preview {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-lg) !important;
+    font-family: var(--font-serif) !important;
+    font-style: italic !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: var(--text-secondary) !important;
+}
+
+.btn-start-call {
+    background: var(--accent-primary-gradient) !important;
+    border-radius: var(--radius-full) !important;
+    box-shadow: 0 10px 28px rgba(230, 57, 86, 0.45) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+}
+
+.btn-start-call::after {
+    content: " →";
+    font-weight: 400;
+}
+
+.btn-shuffle-call {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-full) !important;
+    color: var(--text-secondary) !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-shuffle-call:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.12) !important;
+}
+
+.call-bottom-controls {
+    background: rgba(14, 10, 10, 0.9) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-full) !important;
+}
+
+/* ==========================================================================
+   AURA AR (REALIDAD AUMENTADA & HUD)
+   ========================================================================== */
+.aura-hud-container {
+    background: #070505 !important;
+    border: 3px solid #261E1E !important;
+    border-radius: 36px !important;
+    box-shadow: 
+        0 25px 60px -15px rgba(0, 0, 0, 0.95),
+        0 0 40px rgba(230, 57, 86, 0.12) !important;
+}
+
+.reticle-corner {
+    border-color: rgba(255, 143, 163, 0.7) !important;
+}
+
+.aura-flip-btn:hover {
+    border-color: rgba(255, 143, 163, 0.55) !important;
+}
+
+.btn-scan-trigger {
+    background: var(--accent-primary-gradient) !important;
+    border-radius: var(--radius-full) !important;
+    box-shadow: 0 8px 24px rgba(230, 57, 86, 0.45) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+.aura-result-card {
+    background: rgba(14, 10, 10, 0.95) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85) !important;
+}
+
+.aura-result-title {
+    font-family: var(--font-serif) !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.aura-result-desc {
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.55 !important;
+}
+
+.btn-rescan {
+    background: var(--bg-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-full) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-rescan:hover {
+    border-color: rgba(255, 143, 163, 0.45) !important;
+    color: #ffffff !important;
+    background: rgba(255, 143, 163, 0.12) !important;
+}
+
+/* ==========================================================================
+   MODAL DE PÁNICO (COUNTDOWN & CARDS)
+   ========================================================================== */
+.panic-modal {
+    background: rgba(7, 5, 5, 0.92) !important;
+}
+
+.panic-box {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--accent-primary) !important;
+    border-radius: var(--radius-xl) !important;
+    box-shadow: 0 0 60px rgba(230, 57, 86, 0.35) !important;
+}
+
+.panic-title {
+    font-family: var(--font-serif) !important;
+    font-size: 1.45rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+}
+
+.panic-countdown {
+    font-family: var(--font-serif) !important;
+    font-style: italic !important;
+    font-size: 48px !important;
+    font-weight: 600 !important;
+    color: var(--accent-secondary) !important;
+    text-shadow: 0 0 24px rgba(209, 73, 91, 0.4) !important;
+}
+
+/* ==========================================================================
+   DOCK DE NAVEGACIÓN INFERIOR (PILL & GLASS)
+   ========================================================================== */
+nav.bottom-nav {
+    background: rgba(14, 10, 10, 0.92) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-top: 1px solid var(--border-subtle) !important;
+}
+
+.nav-item {
+    color: var(--text-muted) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.nav-item:hover {
+    color: #ff8fa3 !important;
+}
+
+.nav-item.active {
+    color: #ffffff !important;
+}
+
+.nav-item.active .icon {
+    filter: drop-shadow(0 2px 8px var(--accent-primary-glow)) !important;
+}
+
+.nav-item.active::after {
+    background: var(--accent-primary) !important;
+    box-shadow: 0 0 8px var(--accent-primary) !important;
+    width: 16px !important;
+    height: 3px !important;
+    border-radius: 3px !important;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICACIONES
+   ========================================================================== */
+.toast {
+    background: #141010 !important;
+    color: #ffffff !important;
+    border: 1px solid var(--border-medium) !important;
+    border-radius: var(--radius-full) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}

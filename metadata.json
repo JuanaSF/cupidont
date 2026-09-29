@@ -1,0 +1,10 @@
+{
+  "name": "Tatiana.exe // Radar & Coaching Antiamor",
+  "description": "App táctica para encarar, zafar de situaciones tóxicas con amigos y recibir coaching motivacional de famosos argentinos (Locomotora, Rolón, Moria y más).",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

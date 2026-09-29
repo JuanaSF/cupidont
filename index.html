@@ -1,0 +1,4809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cupidon´t</title>
+    <meta name="description" content="App táctica de defensa personal para encarar, chamuyar y zafar de situaciones tóxicas con videollamadas de coaching de famosos argentinos." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/cora-logo.svg" />
+    <meta property="og:title" content="Cupidon´t // Radar & Videollamada de Coaching" />
+    <meta property="og:description" content="App táctica de defensa personal para encarar, chamuyar y zafar de situaciones tóxicas con videollamadas de coaching de famosos argentinos." />
+    <meta property="og:image" content="/cora-logo.svg" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts: Playfair Display, Instrument Serif, Plus Jakarta Sans, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- YouTube IFrame Player API para control de reproducción y corte automático al finalizar -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- Leaflet.js para Radar Táctico de Geolocalización y Amenazas en Perímetro -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <style>
+        :root {
+            --bg-base: #0B0808;
+            --bg-surface: #141010;
+            --bg-surface-elevated: #181313;
+            --bg-card: #141010;
+            --bg-card-hover: #1A1414;
+
+            --accent-pink: #E63956;
+            --accent-pink-glow: rgba(230, 57, 86, 0.35);
+            --accent-cyan: #ff8fa3;
+            --accent-cyan-glow: rgba(255, 143, 163, 0.35);
+            --accent-green: #34D399;
+            --accent-gold: #F59E0B;
+
+            --text-primary: #FFFFFF;
+            --text-secondary: #B3A8A8;
+            --text-muted: #665E5E;
+
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-medium: rgba(255, 143, 163, 0.25);
+            --border-focus: rgba(255, 143, 163, 0.45);
+
+            --nav-height: 70px;
+            --header-height: 64px;
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            height: 100dvh;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            height: 100%;
+            height: 100dvh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(255, 45, 108, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 20%, rgba(0, 210, 255, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(0, 245, 155, 0.04) 0%, transparent 50%);
+        }
+
+        /* HEADER SUPERIOR CON VIDRIO ESMERILADO Y TOQUES SUTILES */
+        header {
+            height: var(--header-height);
+            background: rgba(11, 15, 24, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 50;
+            flex-shrink: 0;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-pink), #85003b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px var(--accent-pink-glow);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-title {
+            font-weight: 800;
+            font-size: 1.12rem;
+            letter-spacing: -0.3px;
+            background: linear-gradient(90deg, #ffffff 40%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .app-tagline {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.2px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panic-header-btn {
+            background: linear-gradient(135deg, rgba(255, 45, 108, 0.2), rgba(255, 45, 108, 0.08));
+            color: #ff5e91;
+            border: 1px solid rgba(255, 45, 108, 0.35);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 2px 10px rgba(255, 45, 108, 0.15);
+        }
+
+        .panic-header-btn:hover {
+            background: rgba(255, 45, 108, 0.3);
+            border-color: var(--accent-pink);
+            transform: translateY(-1px);
+        }
+
+        .panic-header-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* CONTENEDOR PRINCIPAL DE CONTENIDO CON SCROLL COMPLETO Y FLUIDO */
+        main {
+            flex: 1 1 auto;
+            min-height: 0;
+            height: 100%;
+            position: relative;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+            overflow-x: hidden;
+            padding: 18px 16px;
+            padding-bottom: calc(var(--nav-height) + 60px);
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 210, 255, 0.45) rgba(10, 14, 22, 0.6);
+        }
+
+        main::-webkit-scrollbar {
+            width: 8px;
+        }
+        main::-webkit-scrollbar-track {
+            background: rgba(10, 14, 22, 0.7);
+            border-radius: 4px;
+        }
+        main::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(0, 210, 255, 0.6), rgba(255, 45, 108, 0.6));
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        main::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        .screen {
+            display: none;
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            animation: modernFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            padding-bottom: 24px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes modernFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.99);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* TARJETAS GLASSMORPHIC ULTRA PULIDAS */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-medium);
+        }
+
+        .card-header {
+            margin-bottom: 18px;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .card-header h2 span.icon-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(0, 210, 255, 0.12);
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        .card-subtitle {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* CONTROLES INTERACTIVOS, INPUTS Y BOTONES */
+        label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        textarea, select, input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(11, 15, 24, 0.85);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 14px;
+        }
+
+        textarea:focus, select:focus, input[type="text"]:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(0, 210, 255, 0.15);
+        }
+
+        button.btn-primary {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--accent-pink), #cf1552);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 6px 20px -3px var(--accent-pink-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            margin-bottom: 14px;
+        }
+
+        button.btn-primary:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        button.btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        button.btn-secondary {
+            width: 100%;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        button.btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-medium);
+        }
+
+        /* RESULT BOX ESTILO TERMINAL ELEGANTE */
+        .result-box {
+            background: rgba(7, 10, 16, 0.9);
+            border: 1px solid var(--border-subtle);
+            border-left: 4px solid var(--accent-pink);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            color: #e2e8f0;
+            min-height: 60px;
+            user-select: text;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+        }
+
+        /* CHECKBOXES TÁCTICOS CON INTERACCIÓN MODERNA */
+        .tactical-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .checkbox-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(14, 18, 28, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-card:hover {
+            background: rgba(20, 26, 40, 0.8);
+            border-color: var(--border-medium);
+        }
+
+        .checkbox-card input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            accent-color: var(--accent-pink);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.35;
+        }
+
+        /* ========================================================
+           RADAR TÁCTICO GPS Y MAPA DE AMENAZAS EN PERÍMETRO
+           ======================================================== */
+        .radar-screen-header {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .radar-status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 14px;
+            background: rgba(10, 14, 22, 0.85);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .radar-live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+        }
+
+        .radar-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent-pink);
+            box-shadow: 0 0 10px var(--accent-pink);
+            animation: radarLivePulse 1.4s ease-in-out infinite alternate;
+        }
+
+        @keyframes radarLivePulse {
+            0% { transform: scale(0.85); opacity: 0.5; }
+            100% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px #ff2d6c; }
+        }
+
+        .radar-gps-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            background: rgba(0, 210, 255, 0.1);
+            border: 1px solid rgba(0, 210, 255, 0.25);
+            border-radius: 20px;
+            padding: 4px 10px;
+        }
+
+        .radar-danger-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #ffb703;
+            background: rgba(255, 183, 3, 0.12);
+            border: 1px solid rgba(255, 183, 3, 0.3);
+            border-radius: 20px;
+            padding: 4px 10px;
+        }
+
+        /* BARRA DE CONTROLES TÁCTICOS Y FILTROS */
+        .radar-controls-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .radar-action-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radar-radius-selector {
+            display: inline-flex;
+            background: rgba(8, 11, 18, 0.9);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .radius-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem;
+            font-weight: 600;
+            padding: 5px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .radius-btn.active {
+            background: rgba(0, 210, 255, 0.22);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+            border: 1px solid rgba(0, 210, 255, 0.4);
+        }
+
+        .radar-hud-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .hud-btn {
+            background: rgba(20, 26, 40, 0.85);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .hud-btn:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: rgba(0, 210, 255, 0.08);
+        }
+
+        .hud-btn.primary {
+            background: linear-gradient(135deg, rgba(255, 45, 108, 0.25), rgba(255, 45, 108, 0.1));
+            border-color: rgba(255, 45, 108, 0.4);
+            color: #fff;
+        }
+
+        .hud-btn.primary:hover {
+            border-color: #ff2d6c;
+            box-shadow: 0 0 12px rgba(255, 45, 108, 0.35);
+        }
+
+        /* FILTROS DE CATEGORÍA */
+        .radar-filter-chips {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+
+        .radar-filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .threat-filter-chip {
+            background: rgba(14, 19, 30, 0.7);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.18s ease;
+        }
+
+        .threat-filter-chip.active {
+            background: rgba(0, 210, 255, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* CONTENEDOR DEL MAPA TÁCTICO */
+        .tactical-map-container {
+            position: relative;
+            width: 100%;
+            height: clamp(270px, 36vh, 370px);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid rgba(0, 210, 255, 0.32);
+            box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.75), 0 0 20px rgba(0, 210, 255, 0.08);
+            background: #07090e;
+            margin-bottom: 12px;
+        }
+
+        /* BARRA / BOTÓN DE ATAJO DE SCROLL */
+        .radar-scroll-hint-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: rgba(0, 210, 255, 0.08);
+            border: 1px solid rgba(0, 210, 255, 0.25);
+            border-radius: var(--radius-sm);
+            color: var(--accent-cyan);
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .radar-scroll-hint-bar:hover {
+            background: rgba(0, 210, 255, 0.16);
+            border-color: var(--accent-cyan);
+            transform: translateY(1px);
+        }
+
+        .radar-scroll-hint-bar .scroll-arrow {
+            display: inline-block;
+            font-size: 0.85rem;
+            animation: bounceDown 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes bounceDown {
+            0% { transform: translateY(-2px); }
+            100% { transform: translateY(3px); }
+        }
+
+        #tactical-leaflet-map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: #07090e;
+        }
+
+        /* PERSONALIZACIÓN DE LEAFLET PARA MODO CIBERPUNK/TÁCTICO */
+        .leaflet-container {
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            background: #07090e !important;
+        }
+
+        .leaflet-control-zoom {
+            border: 1px solid var(--border-medium) !important;
+            background: rgba(16, 22, 34, 0.85) !important;
+            backdrop-filter: blur(10px) !important;
+            border-radius: 8px !important;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.6) !important;
+        }
+
+        .leaflet-control-zoom a {
+            background: rgba(16, 22, 34, 0.85) !important;
+            color: var(--accent-cyan) !important;
+            border-bottom: 1px solid var(--border-subtle) !important;
+            transition: background 0.15s;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background: rgba(0, 210, 255, 0.2) !important;
+            color: #fff !important;
+        }
+
+        .leaflet-control-attribution {
+            background: rgba(7, 9, 14, 0.75) !important;
+            color: #556987 !important;
+            font-size: 9px !important;
+            backdrop-filter: blur(4px);
+        }
+
+        .leaflet-control-attribution a {
+            color: #7084a4 !important;
+        }
+
+        /* FILTRO OSCURO CIBERPUNK PARA TILES DE OPENSTREETMAP (100% LIBRE, SIN API KEY NI MARCAS DE AGUA) */
+        .tactical-osm-tiles {
+            filter: brightness(0.64) invert(1) contrast(1.25) hue-rotate(200deg) saturate(0.35) !important;
+        }
+
+        .leaflet-tile {
+            background-color: #07090e !important;
+        }
+
+        /* OVERLAYS TÁCTICOS SOBRE EL MAPA (HUD) */
+        .tactical-hud-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hud-corner {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-color: rgba(0, 210, 255, 0.6);
+            border-style: solid;
+        }
+
+        .hud-corner.tl { top: 10px; left: 10px; border-width: 2px 0 0 2px; }
+        .hud-corner.tr { top: 10px; right: 10px; border-width: 2px 2px 0 0; }
+        .hud-corner.bl { bottom: 10px; left: 10px; border-width: 0 0 2px 2px; }
+        .hud-corner.br { bottom: 10px; right: 10px; border-width: 0 2px 2px 0; }
+
+        .hud-coordinates-pill {
+            position: absolute;
+            top: 10px;
+            left: 36px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: rgba(0, 210, 255, 0.9);
+            background: rgba(8, 12, 20, 0.85);
+            border: 1px solid rgba(0, 210, 255, 0.28);
+            border-radius: 6px;
+            padding: 3px 8px;
+            backdrop-filter: blur(6px);
+            letter-spacing: 0.3px;
+        }
+
+        .hud-scan-mode {
+            position: absolute;
+            bottom: 10px;
+            left: 36px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: rgba(0, 245, 155, 0.85);
+            background: rgba(8, 12, 20, 0.85);
+            border: 1px solid rgba(0, 245, 155, 0.25);
+            border-radius: 6px;
+            padding: 3px 8px;
+            backdrop-filter: blur(6px);
+        }
+
+        /* BARRIDO DE RADAR GIRATORIO CONIC */
+        .radar-sweep-beam {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 180%;
+            height: 180%;
+            transform: translate(-50%, -50%) rotate(0deg);
+            background: conic-gradient(
+                from 0deg,
+                rgba(0, 210, 255, 0.22) 0deg,
+                rgba(0, 210, 255, 0.08) 32deg,
+                transparent 70deg,
+                transparent 360deg
+            );
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            animation: radarBeamRotate 7s linear infinite;
+            opacity: 0.85;
+            transition: opacity 0.3s ease;
+        }
+
+        .radar-sweep-beam.hidden {
+            display: none !important;
+        }
+
+        @keyframes radarBeamRotate {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* ANILLOS CONCÉNTRICOS DE DISTANCIA */
+        .radar-rings-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 320px;
+            height: 320px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px dashed rgba(0, 210, 255, 0.2);
+            pointer-events: none;
+            z-index: 4;
+            box-shadow: 
+                inset 0 0 0 50px rgba(0, 210, 255, 0.01),
+                inset 0 0 0 100px rgba(0, 210, 255, 0.015);
+        }
+
+        .radar-rings-overlay::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 170px;
+            height: 170px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px dotted rgba(0, 210, 255, 0.25);
+        }
+
+        /* ========================================================
+           MARCADORES EN EL MAPA: USUARIO Y AMENAZAS
+           ======================================================== */
+        /* Marcador de Usuario (Agente Sano/a) */
+        .user-radar-divicon {
+            background: transparent;
+            border: none;
+        }
+
+        .user-radar-beacon {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .user-beacon-pulse {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 210, 255, 0.2);
+            border: 1.5px solid var(--accent-cyan);
+            animation: userBeaconWave 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+        }
+
+        @keyframes userBeaconWave {
+            0% { transform: scale(0.6); opacity: 1; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        .user-beacon-core {
+            position: relative;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 12px var(--accent-cyan);
+            border: 2px solid #ffffff;
+            z-index: 2;
+        }
+
+        .user-beacon-label {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(8, 12, 20, 0.92);
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 210, 255, 0.4);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            z-index: 3;
+        }
+
+        /* Marcadores de Amenazas */
+        .threat-radar-divicon {
+            background: transparent;
+            border: none;
+        }
+
+        .threat-marker-wrapper {
+            position: relative;
+            width: 48px;
+            height: 52px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .threat-marker-wrapper:hover,
+        .threat-marker-wrapper.selected {
+            transform: scale(1.18) translateY(-4px);
+            z-index: 9999 !important;
+        }
+
+        .threat-marker-pin {
+            position: relative;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            border: 2px solid var(--threat-color, #ff2d6c);
+            background: rgba(14, 18, 28, 0.94);
+            box-shadow: 0 0 14px var(--threat-color, #ff2d6c);
+            z-index: 2;
+        }
+
+        .threat-beacon-ring {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid var(--threat-color, #ff2d6c);
+            animation: threatRingPulse 2.2s infinite ease-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes threatRingPulse {
+            0% { transform: scale(0.8); opacity: 0.9; }
+            100% { transform: scale(1.9); opacity: 0; }
+        }
+
+        .threat-label-pill {
+            position: absolute;
+            bottom: 0px;
+            background: rgba(10, 14, 22, 0.92);
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--threat-color, rgba(255, 45, 108, 0.45));
+            white-space: nowrap;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 3;
+        }
+
+        .threat-pct-tag {
+            color: var(--threat-color, #ff2d6c);
+            font-weight: 800;
+        }
+
+        /* ========================================================
+           DOSSIER DE AMENAZA SELECCIONADA
+           ======================================================== */
+        .threat-dossier-card {
+            background: rgba(18, 24, 38, 0.88);
+            border: 1px solid var(--border-medium);
+            border-left: 4px solid var(--threat-color, var(--accent-pink));
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.65);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dossier-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .dossier-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dossier-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .dossier-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .dossier-distance {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.76rem;
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dossier-risk-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: rgba(255, 45, 108, 0.15);
+            border: 1px solid rgba(255, 45, 108, 0.35);
+            color: var(--threat-color, #ff2d6c);
+            white-space: nowrap;
+            text-align: right;
+        }
+
+        .dossier-risk-bar-container {
+            margin-bottom: 14px;
+        }
+
+        .dossier-quote-box {
+            background: rgba(8, 11, 18, 0.7);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-style: italic;
+            color: #e2e8f0;
+            font-size: 0.88rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: flex;
+            gap: 8px;
+        }
+
+        .dossier-quote-box span.quote-icon {
+            font-style: normal;
+            opacity: 0.7;
+            font-size: 1.1rem;
+        }
+
+        .dossier-intel-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .dossier-intel-item {
+            font-size: 0.85rem;
+            line-height: 1.45;
+            color: var(--text-secondary);
+        }
+
+        .dossier-intel-item strong {
+            color: var(--text-primary);
+            font-size: 0.86rem;
+        }
+
+        .dossier-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .dossier-action-btn {
+            background: rgba(26, 34, 52, 0.9);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 10px 8px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .dossier-action-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 210, 255, 0.12);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .dossier-action-btn.primary {
+            background: linear-gradient(135deg, rgba(255, 45, 108, 0.3), rgba(255, 45, 108, 0.12));
+            border-color: rgba(255, 45, 108, 0.5);
+            color: #ffffff;
+        }
+
+        .dossier-action-btn.primary:hover {
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 12px rgba(255, 45, 108, 0.4);
+        }
+
+        /* ========================================================
+           FEED DE AMENAZAS CERCANAS DETECTADAS
+           ======================================================== */
+        .threats-feed-section {
+            margin-bottom: 18px;
+        }
+
+        .threats-feed-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .threats-feed-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 210, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .threats-list-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 10px;
+        }
+
+        .threat-list-item {
+            background: rgba(14, 18, 28, 0.75);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .threat-list-item:hover,
+        .threat-list-item.active {
+            border-color: var(--accent-cyan);
+            background: rgba(22, 30, 48, 0.9);
+            transform: translateX(3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .threat-item-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .threat-item-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .threat-item-info {
+            min-width: 0;
+        }
+
+        .threat-item-name {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .threat-item-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .threat-item-danger {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(255, 45, 108, 0.12);
+            color: var(--accent-pink);
+            flex-shrink: 0;
+        }
+
+        /* ACORDEÓN TÁCTICO PARA TEST CONDUCTUAL */
+        .tactical-accordion {
+            background: rgba(12, 16, 26, 0.7);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .tactical-accordion summary {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        .tactical-accordion summary:hover {
+            color: var(--accent-cyan);
+        }
+
+        .tactical-accordion[open] summary {
+            margin-bottom: 14px;
+            color: #ffffff;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 10px;
+        }
+
+        /* RADAR METRO DE RIESGO */
+        .risk-gauge-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(11, 15, 24, 0.7);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            margin-bottom: 16px;
+        }
+
+        .risk-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .risk-bar-track {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            margin: 0 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .risk-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-gold), var(--accent-pink));
+            border-radius: 6px;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .risk-score-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            min-width: 44px;
+            text-align: right;
+        }
+
+        /* PROTOCOLOS GRID EN DEFENSE SHIELD */
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .protocol-chip {
+            padding: 12px 14px;
+            background: rgba(14, 18, 28, 0.65);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .protocol-chip:hover {
+            border-color: var(--accent-cyan);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .protocol-chip.active {
+            background: rgba(0, 210, 255, 0.12);
+            border-color: var(--accent-cyan);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
+        }
+
+        /* CHAT PARSER: BURBUJA PREVIEW */
+        .chat-sample-pills {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            margin-bottom: 12px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .chat-sample-pills::-webkit-scrollbar { display: none; }
+
+        .sample-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 5px 12px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.15s;
+            width: auto;
+            margin-bottom: 0;
+        }
+
+        .sample-pill:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* ========================================================== */
+        /* SECCIÓN VIDEOLLAMADA (TELÉFONO SMARTPHONE HIGH-END)        */
+        /* ========================================================== */
+        .videocall-section-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding-top: 6px;
+        }
+
+        /* SMARTPHONE VERTICAL CON BISEL ULTRA MODERNO */
+        .phone-mockup-frame {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            height: 570px;
+            background-color: #05070a;
+            border-radius: 36px;
+            border: 4px solid #1f2738;
+            box-shadow: 
+                0 25px 60px -15px rgba(0, 0, 0, 0.9),
+                0 0 35px rgba(0, 210, 255, 0.12),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NOTCH / DYNAMIC ISLAND ELEGANTE */
+        .phone-dynamic-island {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 96px;
+            height: 22px;
+            background: #000;
+            border-radius: 12px;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            pointer-events: none;
+        }
+
+        .island-camera {
+            width: 8px;
+            height: 8px;
+            background: #0d1624;
+            border-radius: 50%;
+            border: 1px solid #1a273b;
+        }
+
+        .island-sensor {
+            width: 4px;
+            height: 4px;
+            background: rgba(0, 245, 155, 0.7);
+            border-radius: 50%;
+        }
+
+        /* PANTALLA EN REPOSO / LLAMADA ENTRANTE (FACETIME INCOMING) */
+        .call-idle-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10;
+            background: radial-gradient(circle at 50% 25%, #182236 0%, #06090e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 44px 20px 28px 20px;
+            text-align: center;
+            transition: opacity 0.35s ease, visibility 0.35s;
+        }
+
+        .call-idle-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .call-incoming-tag {
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 1.8px;
+            color: var(--accent-pink);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .call-incoming-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .call-incoming-desc {
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        /* AVATAR CON ONDAS EXPANSIVAS */
+        .call-avatar-pulse-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .call-avatar-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-pink), #680029);
+            border: 3px solid rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.2rem;
+            z-index: 2;
+            box-shadow: 0 0 35px var(--accent-pink-glow);
+        }
+
+        .pulse-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 45, 108, 0.3);
+            transform: translate(-50%, -50%);
+            animation: pulseRipple 2s infinite ease-out;
+            z-index: 1;
+        }
+
+        .pulse-wave.delay {
+            animation-delay: 1s;
+        }
+
+        @keyframes pulseRipple {
+            0% { width: 100px; height: 100px; opacity: 0.8; }
+            100% { width: 220px; height: 220px; opacity: 0; }
+        }
+
+        .call-quote-preview {
+            background: rgba(16, 22, 35, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 0.86rem;
+            line-height: 1.45;
+            color: #f1f5f9;
+            max-width: 280px;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-start-call {
+            background: linear-gradient(135deg, #00e676, #00a152);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            padding: 15px 32px;
+            border-radius: 40px;
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 10px 28px rgba(0, 230, 118, 0.4);
+            animation: callBtnThrob 1.3s infinite alternate cubic-bezier(0.16, 1, 0.3, 1);
+            width: auto;
+            margin-bottom: 0;
+        }
+
+        .btn-shuffle-call {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-medium);
+            color: var(--text-secondary);
+            padding: 9px 18px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-shuffle-call:hover {
+            background: rgba(255, 255, 255, 0.16);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-shuffle-call:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes callBtnThrob {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        /* PANTALLA EN CURSO (CONECTADA) */
+        .call-active-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 5;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .call-video-stream {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .call-video-stream iframe,
+        .call-video-stream #call-youtube-player {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .call-active-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 38px 16px 20px 16px;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, transparent 22%, transparent 72%, rgba(0,0,0,0.88) 100%);
+        }
+
+        .call-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .call-active-caller {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+            margin-bottom: 2px;
+        }
+
+        .call-timer-badge {
+            font-size: 0.78rem;
+            color: var(--accent-green);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 245, 155, 0.25);
+        }
+
+        /* RECUADRO PIP DE LA CÁMARA FRONTAL DEL USUARIO */
+        .call-pip-self {
+            position: relative;
+            width: 96px;
+            height: 132px;
+            background: #0c111a;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.85);
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        #pip-webcam {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            display: none;
+            background: #000;
+        }
+
+        #pip-webcam.active {
+            display: block;
+        }
+
+        .call-pip-fallback {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .call-pip-avatar {
+            font-size: 2.2rem;
+            margin-bottom: 2px;
+        }
+
+        .call-pip-caption {
+            font-size: 0.62rem;
+            color: #94a3b8;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .call-pip-tag {
+            position: absolute;
+            bottom: 4px;
+            left: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 8px;
+            font-size: 0.6rem;
+            color: #ffffff;
+            text-align: center;
+            padding: 2px 4px;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        /* CONTROLES INFERIORES DE LA LLAMADA */
+        .call-bottom-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            pointer-events: auto;
+            background: rgba(14, 18, 28, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-width: 290px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .call-btn-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 0;
+            padding: 0;
+            transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .call-btn-circle:hover {
+            transform: scale(1.08);
+        }
+
+        .call-btn-circle:active {
+            transform: scale(0.92);
+        }
+
+        .btn-call-mute {
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 1.2rem;
+        }
+
+        .btn-call-cam {
+            background: rgba(255, 255, 255, 0.12);
+            font-size: 1.2rem;
+        }
+
+        .btn-call-switch {
+            background: rgba(0, 210, 255, 0.2);
+            border-color: rgba(0, 210, 255, 0.4);
+            font-size: 1.2rem;
+        }
+
+        .btn-call-hangup {
+            background: #ff334b;
+            font-size: 1.4rem;
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 18px rgba(255, 51, 75, 0.5);
+        }
+
+        /* ========================================================== */
+        /* SECCIÓN ESCÁNER DE AURA EN REALIDAD AUMENTADA (AR)        */
+        /* ========================================================== */
+        .aura-section-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 24px;
+        }
+
+        .aura-hud-container {
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            height: 520px;
+            background: #030508;
+            border-radius: 32px;
+            border: 3px solid #1a2233;
+            box-shadow: 
+                0 25px 60px -15px rgba(0, 0, 0, 0.9),
+                0 0 35px rgba(0, 210, 255, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #aura-camera-feed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .aura-camera-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #0d1424 0%, #05080f 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .fallback-radar-grid {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            border: 1px dashed rgba(0, 210, 255, 0.25);
+            animation: radarSpin 12s linear infinite;
+        }
+
+        @keyframes radarSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fallback-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 16px rgba(0, 210, 255, 0.4));
+            z-index: 3;
+        }
+
+        .fallback-text {
+            font-size: 0.92rem;
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-bottom: 18px;
+            z-index: 3;
+        }
+
+        .fallback-btn {
+            z-index: 3;
+            width: auto !important;
+            padding: 10px 22px !important;
+            font-size: 0.88rem !important;
+        }
+
+        #aura-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .aura-hud-top {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .aura-live-badge {
+            background: rgba(10, 14, 23, 0.82);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.68rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #00f59b;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .aura-live-badge .live-dot {
+            width: 7px;
+            height: 7px;
+            background: #00f59b;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00f59b;
+            animation: pulseDot 1s infinite alternate;
+        }
+
+        @keyframes pulseDot {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        .aura-flip-btn {
+            pointer-events: auto;
+            background: rgba(10, 14, 23, 0.82);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 0;
+            padding: 0;
+        }
+
+        .aura-flip-btn:hover {
+            transform: rotate(180deg);
+            border-color: var(--accent-cyan);
+        }
+
+        /* RETÍCULA TÁCTICA CENTRAL */
+        .aura-target-reticle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -55%);
+            width: 190px;
+            height: 240px;
+            border-radius: 24px;
+            pointer-events: none;
+            z-index: 5;
+            transition: all 0.3s ease;
+        }
+
+        .reticle-corner {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: rgba(0, 210, 255, 0.7);
+            border-style: solid;
+        }
+
+        .reticle-corner.tl { top: 0; left: 0; border-width: 3px 0 0 3px; border-top-left-radius: 12px; }
+        .reticle-corner.tr { top: 0; right: 0; border-width: 3px 3px 0 0; border-top-right-radius: 12px; }
+        .reticle-corner.bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; border-bottom-left-radius: 12px; }
+        .reticle-corner.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-bottom-right-radius: 12px; }
+
+        .reticle-crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            transform: translate(-50%, -50%);
+            border: 1px dashed rgba(0, 210, 255, 0.4);
+            border-radius: 50%;
+        }
+
+        /* OVERLAY DE ESCANEO ACTIVO */
+        .aura-scan-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        .aura-scan-overlay.scanning {
+            display: block;
+        }
+
+        .aura-scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00d2ff, #00f59b, transparent);
+            box-shadow: 0 0 20px #00d2ff, 0 0 35px #00f59b;
+            animation: auraSweep 1.2s infinite ease-in-out alternate;
+        }
+
+        @keyframes auraSweep {
+            0% { top: 12%; }
+            100% { top: 88%; }
+        }
+
+        .aura-scan-status-box {
+            position: absolute;
+            bottom: 85px;
+            left: 20px;
+            right: 20px;
+            background: rgba(7, 10, 18, 0.9);
+            border: 1px solid rgba(0, 210, 255, 0.35);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 10px 14px;
+            text-align: center;
+        }
+
+        .aura-scan-phase {
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #00d2ff;
+            margin-bottom: 6px;
+            letter-spacing: 0.8px;
+        }
+
+        .aura-progress-bar-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .aura-progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #00f59b, #ff2d6c);
+            transition: width 0.1s linear;
+        }
+
+        .aura-scan-pct {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #cbd5e1;
+        }
+
+        .aura-hud-bottom {
+            position: absolute;
+            bottom: 16px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .btn-scan-trigger {
+            background: linear-gradient(135deg, #00d2ff, #0077ff);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 800;
+            padding: 13px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 210, 255, 0.45);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: auraPulseBtn 2s infinite alternate;
+            margin-bottom: 0;
+            width: auto;
+        }
+
+        @keyframes auraPulseBtn {
+            from { box-shadow: 0 4px 18px rgba(0, 210, 255, 0.3); transform: scale(1); }
+            to { box-shadow: 0 8px 28px rgba(0, 210, 255, 0.6); transform: scale(1.03); }
+        }
+
+        .btn-scan-trigger:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-scan-trigger:active {
+            transform: scale(0.96);
+        }
+
+        /* TARJETA DE RESULTADO / DIAGNÓSTICO EN LA PARTE INFERIOR DE LA CÁMARA */
+        .aura-result-card {
+            display: none;
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            max-height: 230px;
+            background: rgba(8, 12, 22, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 14px 16px;
+            margin: 0;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+            animation: auraSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            z-index: 15;
+            overflow-y: auto;
+        }
+
+        @keyframes auraSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .aura-result-card.active {
+            display: block;
+        }
+
+        .aura-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .aura-badge-type {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            padding: 3px 9px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            text-transform: uppercase;
+        }
+
+        .aura-score-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .aura-result-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 5px;
+            line-height: 1.25;
+            letter-spacing: -0.2px;
+        }
+
+        .aura-result-desc {
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            line-height: 1.42;
+            margin-bottom: 12px;
+        }
+
+        .aura-result-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-rescan {
+            width: 100% !important;
+            padding: 9px 16px !important;
+            font-size: 0.85rem !important;
+            font-weight: 700 !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
+            border-radius: 12px !important;
+            color: #fff !important;
+            margin-bottom: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-rescan:hover {
+            background: rgba(255, 255, 255, 0.22) !important;
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            transform: scale(1.02);
+        }
+
+        .btn-rescan:active {
+            transform: scale(0.97);
+        }
+
+        /* MODAL DE PÁNICO ANTITATIANA DE ALTO IMPACTO */
+        .panic-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(3, 5, 8, 0.9);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .panic-modal.open {
+            display: flex;
+            animation: modernFadeIn 0.25s ease-out forwards;
+        }
+
+        .panic-box {
+            background: #0f1420;
+            border: 2px solid var(--accent-pink);
+            box-shadow: 0 0 50px rgba(255, 45, 108, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 28px 24px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .panic-icon {
+            font-size: 3.5rem;
+            margin-bottom: 12px;
+            animation: shake 0.6s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            20% { transform: rotate(-8deg); }
+            40% { transform: rotate(8deg); }
+        }
+
+        .panic-title {
+            font-size: 1.35rem;
+            color: #ffffff;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
+        }
+
+        .panic-countdown {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            margin: 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 20px rgba(255, 183, 3, 0.4);
+        }
+
+        /* DOCK DE NAVEGACIÓN INFERIOR (PATRÓN 1 DE MOBILE TOUCH APPS) */
+        nav.bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-height);
+            background: rgba(11, 15, 24, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            padding: 0 8px;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            height: 100%;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .nav-item .icon {
+            font-size: 1.35rem;
+            margin-bottom: 4px;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+        }
+
+        .nav-item.active .icon {
+            transform: scale(1.15) translateY(-2px);
+            filter: drop-shadow(0 2px 8px var(--accent-pink-glow));
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            width: 16px;
+            height: 3px;
+            background: var(--accent-pink);
+            border-radius: 3px;
+            box-shadow: 0 0 8px var(--accent-pink);
+        }
+
+        /* TOAST FLOATING DE RETROALIMENTACIÓN */
+        .toast {
+            position: fixed;
+            bottom: calc(var(--nav-height) + 18px);
+            left: 50%;
+            transform: translateX(-50%) translateY(40px);
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 200;
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+    </style>
+
+    <!-- Estilos de Tema Dark Editorial / Neo-romántica -->
+    <link rel="stylesheet" href="/src/editorial-theme.css">
+</head>
+<body>
+
+    <!-- HEADER SUPERIOR -->
+    <header>
+        <div class="header-brand">
+            <div class="brand-icon">
+                <img src="/cora-logo.svg" alt="Cupidon't Logo" width="28" height="28" />
+            </div>
+            <div class="brand-text">
+                <div class="app-title">Cupidon´t</div>
+                <!-- <div class="app-tagline">Radar & Videollamada Antiamor</div> -->
+            </div>
+        </div>
+        <div class="header-actions">
+            <button class="panic-header-btn" onclick="abrirAlertaPanico()">
+                <span>🚨</span> ¡No le escribas!
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL DE PANTALLAS -->
+    <main>
+
+        <!-- PANTALLA 1: RADAR TÁCTICO GEOGRÁFICO CON GPS & MAPA DE AMENAZAS -->
+        <section id="screen-scanner" class="screen active">
+            <div class="glass-card">
+                
+                <!-- HEADER DE RADAR Y BARRA DE ESTADO -->
+                <div class="radar-screen-header">
+                    <div class="card-header" style="margin-bottom: 0;">
+                        <h2><span class="icon-badge">📡</span> Radar Táctico de Toxicidad</h2>
+                        <p class="card-subtitle">Geolocalización en tiempo real de especímenes de alto riesgo en tu perímetro:</p>
+                    </div>
+
+                    <div class="radar-status-bar">
+                        <div class="radar-live-indicator">
+                            <span class="radar-live-dot"></span>
+                            <span id="radar-scan-status-text">BARRIDO ACTIVO // 432MHz</span>
+                        </div>
+                        <div class="radar-gps-pill" id="radar-gps-pill" title="Click para re-centrar en tu GPS real" onclick="centrarEnUbicacionUsuario()">
+                            <span>📍</span> <span id="radar-gps-text">GPS: Adquiriendo señal...</span>
+                        </div>
+                        <div class="radar-danger-pill" id="radar-perimeter-risk-badge">
+                            <span>⚠️</span> <span id="radar-risk-text">Amenaza Perimetral: 89% (Crítica)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONTROLES Y FILTROS TÁCTICOS -->
+                <div class="radar-controls-panel">
+                    <div class="radar-action-row">
+                        <!-- Selector de Radio -->
+                        <div class="radar-radius-selector" title="Radio de escaneo perimetral">
+                            <span style="font-size: 0.72rem; color: var(--text-muted); align-self: center; margin-right: 4px; font-family: 'JetBrains Mono', monospace; padding-left: 4px;">RADIO:</span>
+                            <button type="button" class="radius-btn active" onclick="cambiarRadioRadar(500, this)">500m</button>
+                            <button type="button" class="radius-btn" onclick="cambiarRadioRadar(1500, this)">1.5km</button>
+                            <button type="button" class="radius-btn" onclick="cambiarRadioRadar(3000, this)">3km</button>
+                        </div>
+
+                        <!-- Botones de Acción Rápida -->
+                        <div class="radar-hud-btns">
+                            <button type="button" class="hud-btn primary" onclick="reescanearPerimetro()" title="Re-escanear radio perimetral">
+                                <span>🔄</span> Re-escanear
+                            </button>
+                            <button type="button" class="hud-btn" onclick="centrarEnUbicacionUsuario()" title="Centrar mapa en mi ubicación">
+                                <span>🎯</span> Mi Posición
+                            </button>
+                            <button type="button" class="hud-btn" id="btn-toggle-sweep" onclick="toggleRadarSweepOverlay()" title="Activar/Desactivar efecto visual de barrido HUD">
+                                <span>💫</span> HUD
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros de Tipos de Amenazas -->
+                    <div class="radar-filter-chips">
+                        <button type="button" class="threat-filter-chip active" onclick="filtrarAmenazasRadar('todos', this)">Todas las amenazas (8)</button>
+                        <button type="button" class="threat-filter-chip" onclick="filtrarAmenazasRadar('criticos', this)">🚨 Críticos (Chernobyl / Daddy Issues)</button>
+                        <button type="button" class="threat-filter-chip" onclick="filtrarAmenazasRadar('ex', this)">💔 No supera al ex</button>
+                        <button type="button" class="threat-filter-chip" onclick="filtrarAmenazasRadar('lovebomb', this)">💣 Love Bombing</button>
+                        <button type="button" class="threat-filter-chip" onclick="filtrarAmenazasRadar('ghost', this)">👻 Fantasmas / Ghosters</button>
+                        <button type="button" class="threat-filter-chip" onclick="filtrarAmenazasRadar('indecisos', this)">🤷 Indecisos / Ni-Ni</button>
+                    </div>
+                </div>
+
+                <!-- CONTENEDOR DEL MAPA TÁCTICO -->
+                <div class="tactical-map-container" id="tactical-map-container">
+                    <div id="tactical-leaflet-map"></div>
+
+                    <!-- HUD OVERLAY CON COORDENADAS Y EFECTO DE BARRIDO -->
+                    <div class="tactical-hud-overlay">
+                        <div class="hud-corner tl"></div>
+                        <div class="hud-corner tr"></div>
+                        <div class="hud-corner bl"></div>
+                        <div class="hud-corner br"></div>
+
+                        <div class="hud-coordinates-pill" id="hud-coordinates-text">
+                            LAT: -34.5882° | LON: -58.4231° // TACTICAL GRID
+                        </div>
+
+                        <div class="hud-scan-mode" id="hud-scan-count">
+                            RADAR OPERATIVO: 8 CONTACTOS
+                        </div>
+                    </div>
+
+                    <!-- Anillos y rayo giratorio de radar -->
+                    <div class="radar-rings-overlay"></div>
+                    <div class="radar-sweep-beam" id="radar-sweep-beam"></div>
+                </div>
+
+                <!-- BARRA / BOTÓN DE ATAJO DE SCROLL HACIA DOSSIER -->
+                <div class="radar-scroll-hint-bar" onclick="scrollHaciaDossier()" title="Click para bajar y ver el informe de la amenaza">
+                    <span>📜 Deslizá hacia abajo para ver el Dossier y las 8 Amenazas</span>
+                    <span class="scroll-arrow">⬇️</span>
+                </div>
+
+                <!-- DOSSIER DE LA AMENAZA SELECCIONADA -->
+                <div class="threat-dossier-card" id="threat-dossier-card">
+                    <!-- Se inyecta dinámicamente con la amenaza seleccionada -->
+                </div>
+
+                <!-- FEED DE AMENAZAS DETECTADAS EN RADIO -->
+                <div class="threats-feed-section">
+                    <div class="threats-feed-title">
+                        <span>Contactos Hostiles en Radio Cercano</span>
+                        <span class="threats-feed-count" id="threats-feed-count-badge">8 detectados</span>
+                    </div>
+                    <div class="threats-list-cards" id="threats-list-cards">
+                        <!-- Inyección de tarjetas de amenazas -->
+                    </div>
+                </div>
+
+                <!-- TEST CONDUCTUAL CLÁSICO (PRESERVADO EN ACORDEÓN TÁCTICO) -->
+                <details class="tactical-accordion">
+                    <summary>
+                        <span>📋 ¿Tenés a un sospechoso puntual en la mira? Abrir Test Manual</span>
+                        <span style="font-size: 0.75rem; color: var(--accent-cyan);">▼</span>
+                    </summary>
+                    <div style="padding-top: 10px;">
+                        <p class="card-subtitle" style="margin-bottom: 12px;">Marcá los comportamientos sospechosos para calcular el nivel de peligro específico:</p>
+                        
+                        <!-- MEDIDOR DE RIESGO GRÁFICO -->
+                        <div class="risk-gauge-container">
+                            <span class="risk-label">Riesgo</span>
+                            <div class="risk-bar-track">
+                                <div class="risk-bar-fill" id="risk-bar-fill"></div>
+                            </div>
+                            <span class="risk-score-value" id="risk-pct-value">0%</span>
+                        </div>
+
+                        <div class="tactical-checkboxes">
+                            <label class="checkbox-card">
+                                <input type="checkbox" class="chk-risk" onchange="ejecutarEscaneo()">
+                                <span class="checkbox-text">Historias de Instagram con indirectas o música triste</span>
+                            </label>
+                            <label class="checkbox-card">
+                                <input type="checkbox" class="chk-risk" onchange="ejecutarEscaneo()">
+                                <span class="checkbox-text">Frase clásica: "Odio el drama" pero lo busca</span>
+                            </label>
+                            <label class="checkbox-card">
+                                <input type="checkbox" class="chk-risk" onchange="ejecutarEscaneo()">
+                                <span class="checkbox-text">Tarda 6 horas en contestar pero sube 10 TikToks</span>
+                            </label>
+                            <label class="checkbox-card">
+                                <input type="checkbox" class="chk-risk" onchange="ejecutarEscaneo()">
+                                <span class="checkbox-text">Te dice "sos diferente a todos/as" demasiado rápido</span>
+                            </label>
+                            <label class="checkbox-card">
+                                <input type="checkbox" class="chk-risk" onchange="ejecutarEscaneo()">
+                                <span class="checkbox-text">Le atraen los amores conflictivos e imposibles</span>
+                            </label>
+                        </div>
+
+                        <button class="btn-primary" onclick="ejecutarEscaneo()">
+                            ⚡ Diagnosticar Nivel de Riesgo Manual
+                        </button>
+                        <div class="result-box" id="res-scanner">Esperando parámetros. Marcá las casillas de arriba.</div>
+                    </div>
+                </details>
+
+            </div>
+        </section>
+
+        <!-- PANTALLA 2: CHAT PARSER -->
+        <section id="screen-chat" class="screen">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h2><span class="icon-badge">💬</span> Chat Parser (OCR)</h2>
+                    <p class="card-subtitle">Pegá el mensaje que te mandó para decodificar la manipulación oculta:</p>
+                </div>
+
+                <!-- PRESETS RÁPIDOS PARA PROBAR -->
+                <div class="chat-sample-pills">
+                    <button class="sample-pill" onclick="cargarSampleChat('colgue')">"Colgué mal..."</button>
+                    <button class="sample-pill" onclick="cargarSampleChat('jaja')">"Jajaja de una"</button>
+                    <button class="sample-pill" onclick="cargarSampleChat('diferente')">"Sos re diferente"</button>
+                    <button class="sample-pill" onclick="cargarSampleChat('amigos')">"Te quiero como amigo"</button>
+                </div>
+
+                <label for="input-chat">Mensaje recibido:</label>
+                <textarea id="input-chat" rows="3" placeholder="Ej: 'Jajaja nada que ver, colgué porque ando a full pero el finde vemos qué onda...'"></textarea>
+
+                <button class="btn-primary" onclick="analizarChatApp()">
+                    🔍 Decodificar Manipulación
+                </button>
+                <div class="result-box" id="res-chat-app">Aguardando texto para analizar...</div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 3: DEFENSE SHIELD -->
+        <section id="screen-shield" class="screen">
+            <div class="glass-card">
+                <div class="card-header">
+                    <h2><span class="icon-badge">🛡️</span> Defense Shield</h2>
+                    <p class="card-subtitle">Respuestas tácticas con dignidad para no regalarte jamás:</p>
+                </div>
+
+                <label>Seleccioná el protocolo táctico:</label>
+                <div class="protocol-grid">
+                    <button class="protocol-chip active" onclick="seleccionarProtocolo('cancelar', this)">❌ Cancelar cita</button>
+                    <button class="protocol-chip" onclick="seleccionarProtocolo('visto', this)">🕒 Visto 8 horas</button>
+                    <button class="protocol-chip" onclick="seleccionarProtocolo('ghostear', this)">👋 Ghosteo suave</button>
+                    <button class="protocol-chip" onclick="seleccionarProtocolo('picante', this)">🌶️ Contraataque</button>
+                    <button class="protocol-chip" onclick="seleccionarProtocolo('desinteres', this)">🧊 Frialdad pura</button>
+                    <button class="protocol-chip" onclick="seleccionarProtocolo('amigos', this)">🤝 Friendzone</button>
+                </div>
+
+                <button class="btn-primary" onclick="generarShield()">
+                    🎲 Generar Nueva Variante
+                </button>
+
+                <div class="result-box" id="res-shield" style="font-size:0.96rem; font-weight:500;">
+                    Seleccioná un protocolo para generar la respuesta táctica.
+                </div>
+
+                <button id="btn-copy-app" class="btn-secondary" style="margin-top:14px;" onclick="copiarShield()">
+                    📋 Copiar Respuesta al Portapapeles
+                </button>
+            </div>
+        </section>
+
+        <!-- PANTALLA 4: COACHING POR VIDEOLLAMADA (TELÉFONO SMARTPHONE HIGH-END) -->
+        <section id="screen-coaching" class="screen">
+            <div class="videocall-section-wrapper">
+                
+                <!-- SMARTPHONE / TELÉFONO VERTICAL -->
+                <div class="phone-mockup-frame">
+                    
+                    <!-- NOTCH SUPERIOR -->
+                    <div class="phone-dynamic-island">
+                        <div class="island-camera"></div>
+                        <div class="island-sensor"></div>
+                    </div>
+
+                    <!-- ESTADO 1: LLAMADA ENTRANTE (EL VIDEO NO SE REPRODUCE HASTA ATENDER) -->
+                    <div class="call-idle-screen" id="call-idle-screen">
+                        <div>
+                            <div class="call-incoming-tag">
+                                <span>●</span> LLAMADA ENTRANTE DE COACHING
+                            </div>
+                            <div class="call-incoming-name" id="incoming-name">Locomotora Oliveras</div>
+                            <div class="call-incoming-desc" id="incoming-specialty">Motivación Extrema y Dignidad</div>
+                        </div>
+
+                        <!-- AVATAR CON ONDAS EXPANSIVAS -->
+                        <div class="call-avatar-pulse-wrapper">
+                            <div class="pulse-wave"></div>
+                            <div class="pulse-wave delay"></div>
+                            <div class="call-avatar-circle" id="incoming-avatar">🥊</div>
+                        </div>
+
+                        <div style="display:flex; flex-direction:column; align-items:center;">
+                            <div class="call-quote-preview" id="incoming-quote">
+                                "¡¡DESPERTATE LOCO!! ¡¡SI QUERÉS QUE TE QUIERAN, QUERETE VOS PRIMERO!!"
+                            </div>
+
+                            <button class="btn-start-call" onclick="iniciarVideollamada()">
+                                📞 Atender Videollamada
+                            </button>
+
+                            <button class="btn-shuffle-call" onclick="cambiarCoachAleatorio()">
+                                🎲 Cambiar Coach / Video
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ESTADO 2: VIDEOLLAMADA EN CURSO (STREAM YOUTUBE + WEBCAM PIP) -->
+                    <div class="call-active-screen">
+                        
+                        <div class="call-video-stream">
+                            <div id="call-youtube-player"></div>
+                        </div>
+
+                        <!-- OVERLAY DE CONTROLES -->
+                        <div class="call-active-overlay">
+                            
+                            <!-- PARTE SUPERIOR: NOMBRE, TIEMPO Y WEBCAM DEL USUARIO -->
+                            <div class="call-top-bar">
+                                <div class="call-connected-info">
+                                    <div class="call-active-caller" id="call-connected-name">Locomotora Oliveras</div>
+                                    <div class="call-timer-badge">
+                                        <span>●</span> <span id="call-timer-display">00:00</span>
+                                    </div>
+                                </div>
+
+                                <!-- RECUADRO PIP CON TU CÁMARA FRONTAL -->
+                                <div class="call-pip-self" id="call-pip-self">
+                                    <video id="pip-webcam" autoplay playsinline muted></video>
+
+                                    <div class="call-pip-fallback" id="pip-fallback">
+                                        <div class="call-pip-avatar">🥲</div>
+                                        <div class="call-pip-caption">Vos sufriendo</div>
+                                    </div>
+
+                                    <div class="call-pip-tag">Vos 🥲</div>
+                                </div>
+                            </div>
+
+                            <!-- CONTROLES INFERIORES -->
+                            <div class="call-bottom-controls">
+                                <button class="call-btn-circle btn-call-mute" id="btn-call-mute" onclick="toggleMute()" title="Silenciar">
+                                    🎙️
+                                </button>
+                                <button class="call-btn-circle btn-call-cam" id="btn-call-camera" onclick="toggleCamara()" title="Apagar / Encender cámara">
+                                    📹
+                                </button>
+                                <button class="call-btn-circle btn-call-switch" onclick="cambiarSiguienteCoachAleatorio()" title="Siguiente video aleatorio">
+                                    🔄
+                                </button>
+                                <button class="call-btn-circle btn-call-hangup" onclick="colgarVideollamada(false)" title="Cortar llamada">
+                                    🔴
+                                </button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PANTALLA 5: ESCÁNER DE AURA EN REALIDAD AUMENTADA (AR) -->
+        <section id="screen-aura" class="screen">
+            <div class="aura-section-wrapper">
+                
+                <div class="aura-hud-container" id="aura-hud-container">
+                    
+                    <!-- VIDEO FEED REAL DE LA CÁMARA -->
+                    <video id="aura-camera-feed" autoplay playsinline muted></video>
+
+                    <!-- FALLBACK CUANDO LA CÁMARA ESTÁ APAGADA / NO DISPONIBLE -->
+                    <div class="aura-camera-fallback" id="aura-camera-fallback">
+                        <div class="fallback-radar-grid"></div>
+                        <div class="fallback-icon">📷</div>
+                        <div class="fallback-text">Cámara en espera para escaneo</div>
+                        <button class="btn-primary fallback-btn" onclick="iniciarCamaraAura()">
+                            ⚡ Activar Cámara AR
+                        </button>
+                    </div>
+
+                    <!-- CANVAS DE EFECTOS AR (HOLO-HUD + AURA + PROPS) -->
+                    <canvas id="aura-canvas"></canvas>
+
+                    <!-- HEADER SUPERIOR DEL HUD AR -->
+                    <div class="aura-hud-top">
+                        <div class="aura-live-badge">
+                            <span class="live-dot"></span> SPECTRO-AR // v2.4
+                        </div>
+                        <button class="aura-flip-btn" onclick="alternarCamaraAura()" title="Cambiar cámara">
+                            🔄
+                        </button>
+                    </div>
+
+                    <!-- RETÍCULA TÁCTICA CENTRAL -->
+                    <div class="aura-target-reticle" id="aura-target-reticle">
+                        <div class="reticle-corner tl"></div>
+                        <div class="reticle-corner tr"></div>
+                        <div class="reticle-corner bl"></div>
+                        <div class="reticle-corner br"></div>
+                        <div class="reticle-crosshair"></div>
+                    </div>
+
+                    <!-- OVERLAY DE ESCANEO ACTIVO -->
+                    <div class="aura-scan-overlay" id="aura-scan-overlay">
+                        <div class="aura-scan-line"></div>
+                        <div class="aura-scan-status-box">
+                            <div class="aura-scan-phase" id="aura-scan-phase">SINTONIZANDO VIBRACIÓN...</div>
+                            <div class="aura-progress-bar-track">
+                                <div class="aura-progress-bar-fill" id="aura-progress-fill"></div>
+                            </div>
+                            <div class="aura-scan-pct" id="aura-scan-pct">0%</div>
+                        </div>
+                    </div>
+
+                    <!-- CONTROLES INFERIORES DEL VISOR -->
+                    <div class="aura-hud-bottom" id="aura-hud-bottom">
+                        <button class="btn-scan-trigger" id="btn-scan-trigger" onclick="dispararEscaneoAura()">
+                            👁️ Escanear Aura
+                        </button>
+                    </div>
+
+                    <!-- TARJETA DE RESULTADO / DIAGNÓSTICO DEL AURA (SUPERPUESTA EN LA CÁMARA) -->
+                    <div class="aura-result-card" id="aura-result-card">
+                        <div class="aura-result-header">
+                            <div class="aura-badge-type" id="aura-result-badge">😈 DIABLO</div>
+                            <div class="aura-score-tag" id="aura-result-freq">666 Hz • PELIGRO EXTREMO</div>
+                        </div>
+                        <div class="aura-result-title" id="aura-result-title">Aura Carmesí de Manipulación & Caos</div>
+                        <p class="aura-result-desc" id="aura-result-desc">
+                            Peligro inminente: Clava el visto 3 días, vuelve como si nada y te desestabiliza emocionalmente. Cero apego seguro.
+                        </p>
+                        <div class="aura-result-actions">
+                            <button class="btn-rescan" onclick="resetearEscaneoAura()">
+                                🔄 Escanear a Otra Persona
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- DOCK DE NAVEGACIÓN INFERIOR (5 TABS) -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('screen-scanner', this)">
+            <span class="icon">📡</span>
+            <span>Radar</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('screen-chat', this)">
+            <span class="icon">💬</span>
+            <span>Parser</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('screen-shield', this)">
+            <span class="icon">🛡️</span>
+            <span>Shield</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('screen-coaching', this)">
+            <span class="icon">📞</span>
+            <span>Coaching</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('screen-aura', this)">
+            <span class="icon">👁️</span>
+            <span>Aura AR</span>
+        </div>
+    </nav>
+
+    <!-- MODAL DE PÁNICO ANTITATIANA -->
+    <div id="panic-modal" class="panic-modal">
+        <div class="panic-box">
+            <div class="panic-icon">🚨</div>
+            <div class="panic-title">¡INTERVENCIÓN DE EMERGENCIA!</div>
+            <p style="font-size:0.9rem; color: #cbd5e1; line-height:1.45;">
+                ¡FRENÁ ESE DEDO INMEDIATAMENTE! No le mandes ese mensaje. No te humilles.
+            </p>
+            <div class="panic-countdown" id="panic-timer">10</div>
+            <p style="font-size:0.8rem; color: var(--text-muted); margin-bottom: 20px;">
+                Respirá hondo hasta que el contador llegue a cero. La Locomotora y Moria te están observando.
+            </p>
+            <button class="btn-primary" id="panic-abort-btn" onclick="cerrarAlertaPanico()" style="margin-bottom:0;" disabled>
+                Cerrar (Bloqueado por seguridad)
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST DE RETROALIMENTACIÓN -->
+    <div id="toast" class="toast">Texto copiado</div>
+
+    <!-- JAVASCRIPT VANILLA -->
+    <script>
+        // ========================================================
+        // 1. SISTEMA DE NAVEGACIÓN ENTRE PANTALLAS (TABS)
+        // ========================================================
+        function switchTab(screenId, element) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.add('active');
+            }
+            if (element) {
+                element.classList.add('active');
+            }
+
+            // Gestión inteligente de mapa Leaflet al cambiar de pestaña
+            if (screenId === 'screen-scanner') {
+                setTimeout(() => {
+                    refrescarMapaRadar();
+                }, 120);
+            }
+
+            // Gestión inteligente de cámara entre pestañas
+            if (screenId === 'screen-aura') {
+                iniciarCamaraAura();
+            } else {
+                detenerCamaraAura();
+            }
+
+            if (screenId !== 'screen-coaching' && llamadaEnCurso) {
+                colgarVideollamada(false);
+            }
+        }
+        window.switchTab = switchTab;
+
+        // ========================================================
+        // 2. MÓDULO RADAR TÁCTICO GEOGRÁFICO CON GPS & MAPA LEAFLET
+        // ========================================================
+
+        // Coordenadas base por defecto: Palermo Soho, CABA (Área con alta densidad de especímenes)
+        const DEFAULT_RADAR_LAT = -34.5882;
+        const DEFAULT_RADAR_LNG = -58.4231;
+
+        let userCoords = { lat: DEFAULT_RADAR_LAT, lng: DEFAULT_RADAR_LNG };
+        let userAccuracy = null;
+        let isRealGPS = false;
+
+        let radarMap = null;
+        let radarUserMarker = null;
+        let radarRadiusCircle = null;
+        let radarThreatLayer = null;
+
+        let currentRadarRadius = 500; // 500m | 1500m | 3000m
+        let currentThreatFilter = 'todos';
+        let selectedThreatId = "daddy_issues";
+        let radarSweepEnabled = true;
+
+        // Base de datos de amenazas y especímenes detectables en el radar
+        const THREATS_CATALOG = [
+            {
+                id: "daddy_issues",
+                name: "Daddy Issues Agudo",
+                shortName: "Daddy Issues",
+                categoria: "criticos",
+                icon: "🥀",
+                color: "#E63956",
+                dangerPct: 89,
+                ratioDistance: 0.36, // fracción del radio actual
+                bearing: 38,        // ángulo en grados desde el usuario
+                estado: "Buscando validación en historias de mejores amigos a las 3 AM",
+                frase: "Me hacés acordar a mi papá cuando era bueno conmigo... ¿vos me vas a abandonar también?",
+                analisis: "Proyecta vacíos infantiles en tus respuestas de WhatsApp. Si tardás 15 minutos en contestar asume desprecio absoluto.",
+                protocolo: "Evasión preventiva. La sesión de terapia se cobra por hora, vos no sos psicólogo/a matriculado/a.",
+                shieldAction: "desinteres",
+                coachingId: "rolon"
+            },
+            {
+                id: "no_supera_ex",
+                name: "No Supera al Ex",
+                shortName: "No supera al Ex",
+                categoria: "ex",
+                icon: "💔",
+                color: "#D1495B",
+                dangerPct: 93,
+                ratioDistance: 0.62,
+                bearing: 145,
+                estado: "Escuchando Milo J y scrolleando fotos de las vacaciones 2022",
+                frase: "Con mi ex veníamos siempre a este bodegón... pero nada que ver eh, ya es re pasado, somos re amigos",
+                analisis: "Tiene chats archivados con clave y te compara mentalmente cada vez que pedís un trago o te reís.",
+                protocolo: "Zona de fuego cruzado. Sos un clavo que no va a sacar a ningún clavo y vas a pagar los platos rotos.",
+                shieldAction: "cancelar",
+                coachingId: "moria"
+            },
+            {
+                id: "toxico_chernobyl",
+                name: "Tóxico/a Nivel Chernobyl",
+                shortName: "Tóxico/a Extremo",
+                categoria: "criticos",
+                icon: "☣️",
+                color: "#F2546D",
+                dangerPct: 97,
+                ratioDistance: 0.84,
+                bearing: 220,
+                estado: "Monitoreando tus últimos seguidos y el estado 'En línea'",
+                frase: "¿Quién es esa/e que te comentó con un fueguito? Si no tenés nada que ocultar desbloqueá el celu ya",
+                analisis: "Aparato de contrainteligencia soviético. Te hace gaslighting profesional hasta convencerte de que el culpable sos vos.",
+                protocolo: "Protocolo HAZMAT Máximo: Desconexión táctica, bloqueo preventivo y resguardo de claves bancarias.",
+                shieldAction: "visto",
+                coachingId: "locomotora"
+            },
+            {
+                id: "love_bomber",
+                name: "Love Bomber Serial",
+                shortName: "Love Bomber",
+                categoria: "lovebomb",
+                icon: "💣",
+                color: "#F59E0B",
+                dangerPct: 86,
+                ratioDistance: 0.48,
+                bearing: 290,
+                estado: "Planeando vacaciones en Brasil al 4to día de match en Tinder",
+                frase: "Nunca sentí una conexión tan mágica con nadie en mi vida, te juro que somos almas gemelas",
+                analisis: "Fuegos artificiales de cotillón. Te idealiza a niveles estratosféricos para luego evaporarse cuando cae en la realidad.",
+                protocolo: "No firmes contratos afectivos en la primera semana. Bajá la espuma de la cerveza con frialdad calculada.",
+                shieldAction: "picante",
+                coachingId: "francella"
+            },
+            {
+                id: "ghoster",
+                name: "Ghoster Profesional / Fantasma",
+                shortName: "Ghoster Serial",
+                categoria: "ghost",
+                icon: "👻",
+                color: "#A855F7",
+                dangerPct: 91,
+                ratioDistance: 0.74,
+                bearing: 82,
+                estado: "Reviviendo de la tumba tras 27 días sin responder",
+                frase: "¡Hola perdido/a! Colgué una banda, estuve re a mil con mudanza y trámites... ¿qué sale hoy?",
+                analisis: "Te usa de neumático de auxilio cuando se pinchan sus otros tres planes del fin de semana.",
+                protocolo: "Visto táctico permanente. Si tardó un mes en escribir, tardá un milenio en responderle.",
+                shieldAction: "ghostear",
+                coachingId: "moria"
+            },
+            {
+                id: "indeciso",
+                name: "Indeciso/a Crónico/a",
+                shortName: "Indeciso/a Ni-Ni",
+                categoria: "indecisos",
+                icon: "🤷",
+                color: "#E64A62",
+                dangerPct: 79,
+                ratioDistance: 0.55,
+                bearing: 195,
+                estado: "El 'Perro del Hortelano': no come ni deja comer",
+                frase: "No estoy en un momento para etiquetar lo que nos pasa, pero tampoco me pinta que salgas con nadie más",
+                analisis: "Quiere el buffet completo con tarifa de menú ejecutivo. Mantiene la puerta entreabierta para no perder el control.",
+                protocolo: "Clausura del boliche. O exclusividad o pasás a la lista general de conocidos lejanos.",
+                shieldAction: "amigos",
+                coachingId: "fantino"
+            },
+            {
+                id: "odio_drama",
+                name: "Productor/a de Drama ('Cero Drama')",
+                shortName: "Odio el Drama",
+                categoria: "criticos",
+                icon: "🎭",
+                color: "#E59866",
+                dangerPct: 85,
+                ratioDistance: 0.68,
+                bearing: 325,
+                estado: "Fabricando un conflicto existencial porque no usaste emojis",
+                frase: "Yo soy cero drama, me encanta la paz mental... pero me parece re fuerte el tonito con el que me hablaste",
+                analisis: "Tiene el guión de la tragedia listo. El que más pregona que odia el drama suele ser el director de la obra.",
+                protocolo: "Respuestas monosilábicas de neutralidad suiza. No le des leña a la caldera del conflicto.",
+                shieldAction: "desinteres",
+                coachingId: "maradona"
+            },
+            {
+                id: "gym_ego",
+                name: "Monotemático Gym & Macros",
+                shortName: "Gym Bro / Ego",
+                categoria: "otros",
+                icon: "💪",
+                color: "#10B981",
+                dangerPct: 73,
+                ratioDistance: 0.88,
+                bearing: 110,
+                estado: "Pesando 180g de batata al vapor frente al espejo",
+                frase: "¿Ese trago tiene azúcar simple? Te arruina el glucógeno... mirá el corte que metí en el dorsal derecho",
+                analisis: "El espejo del baño es su único amor verdadero. Tu presencia es meramente ornamental para sacarle fotos entrenando.",
+                protocolo: "Proponé una picada con salame y queso cheddar y observá cómo se repliega a su zona de confort.",
+                shieldAction: "picante",
+                coachingId: "locomotora"
+            }
+        ];
+
+        // Estado en memoria de las posiciones calculadas de amenazas
+        let calculatedThreats = [];
+
+        // Generador de audio de radar sintético (Web Audio API)
+        let radarAudioCtx = null;
+        function sonarPing() {
+            try {
+                const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtxClass) return;
+                if (!radarAudioCtx) {
+                    radarAudioCtx = new AudioCtxClass();
+                }
+                if (radarAudioCtx.state === 'suspended') {
+                    radarAudioCtx.resume();
+                }
+                const osc = radarAudioCtx.createOscillator();
+                const gain = radarAudioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(920, radarAudioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(440, radarAudioCtx.currentTime + 0.28);
+                gain.gain.setValueAtTime(0.06, radarAudioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, radarAudioCtx.currentTime + 0.28);
+                osc.connect(gain);
+                gain.connect(radarAudioCtx.destination);
+                osc.start();
+                osc.stop(radarAudioCtx.currentTime + 0.29);
+            } catch(e) {
+                // Silencioso si el navegador restringe audio sin interacción
+            }
+        }
+
+        // Cálculo geométrico de coordenadas para puntos distribuidos en radio
+        function calcularOffsetCoordenadas(lat, lng, distanciaMetros, anguloGrados) {
+            const radioTierra = 6378137; // metros
+            const anguloRad = (anguloGrados * Math.PI) / 180;
+            const dLat = (distanciaMetros * Math.cos(anguloRad)) / radioTierra;
+            const dLng = (distanciaMetros * Math.sin(anguloRad)) / (radioTierra * Math.cos((lat * Math.PI) / 180));
+            return {
+                lat: lat + (dLat * 180) / Math.PI,
+                lng: lng + (dLng * 180) / Math.PI
+            };
+        }
+
+        // Inicialización del Mapa Leaflet y Adquisición de Señal GPS
+        function inicializarRadarTactico() {
+            if (typeof L === 'undefined') {
+                console.warn("Leaflet no disponible aún, reintentando...");
+                setTimeout(inicializarRadarTactico, 200);
+                return;
+            }
+
+            const mapContainer = document.getElementById('tactical-leaflet-map');
+            if (!mapContainer || radarMap) return;
+
+            // Instancia de Mapa Leaflet
+            radarMap = L.map('tactical-leaflet-map', {
+                center: [userCoords.lat, userCoords.lng],
+                zoom: 16,
+                zoomControl: true,
+                attributionControl: true,
+                scrollWheelZoom: false // Permite hacer scroll libre en la página sin que el mapa capture la rueda del mouse
+            });
+
+            // Capa de mosaicos táctica 100% LIBRE (OpenStreetMap con filtro ciberpunk oscuro sin API keys ni marcas de agua)
+            const tacticalTiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                className: 'tactical-osm-tiles',
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+            });
+
+            tacticalTiles.addTo(radarMap);
+
+            // Capa para las amenazas
+            radarThreatLayer = L.layerGroup().addTo(radarMap);
+
+            // Crear marcador de usuario (Agente Sano)
+            crearMarcadorUsuario();
+
+            // Adquirir geolocalización real si está permitida
+            solicitarGeolocalizacionUsuario(true);
+
+            // Generar y posicionar amenazas en el mapa
+            recalcularPosicionesAmenazas();
+            renderizarAmenazasEnMapa();
+            renderizarFeedAmenazas();
+            actualizarDossierAmenaza(selectedThreatId);
+            actualizarHudCoordenadas();
+
+            // Escuchar movimiento del mapa para actualizar HUD
+            radarMap.on('move', () => {
+                const center = radarMap.getCenter();
+                const hudCoord = document.getElementById('hud-coordinates-text');
+                if (hudCoord) {
+                    hudCoord.innerText = `LAT: ${center.lat.toFixed(4)}° | LON: ${center.lng.toFixed(4)}° // TACTICAL GRID`;
+                }
+            });
+        }
+        window.inicializarRadarTactico = inicializarRadarTactico;
+
+        // Refrescar tamaño del mapa al cambiar de pantalla
+        function refrescarMapaRadar() {
+            if (radarMap) {
+                radarMap.invalidateSize();
+            } else {
+                inicializarRadarTactico();
+            }
+        }
+        window.refrescarMapaRadar = refrescarMapaRadar;
+
+        // Crear/actualizar marcador del usuario
+        function crearMarcadorUsuario() {
+            if (!radarMap) return;
+
+            const userHtml = `
+                <div class="user-radar-beacon" title="Tu posición actual (Agente Sano/a)">
+                    <div class="user-beacon-pulse"></div>
+                    <div class="user-beacon-core"></div>
+                    <div class="user-beacon-label">TÚ</div>
+                </div>
+            `;
+
+            const userIcon = L.divIcon({
+                className: 'user-radar-divicon',
+                html: userHtml,
+                iconSize: [38, 38],
+                iconAnchor: [19, 19]
+            });
+
+            if (radarUserMarker) {
+                radarUserMarker.setLatLng([userCoords.lat, userCoords.lng]);
+            } else {
+                radarUserMarker = L.marker([userCoords.lat, userCoords.lng], {
+                    icon: userIcon,
+                    zIndexOffset: 1000
+                }).addTo(radarMap);
+            }
+
+            // Anillo translúcido del radio de detección
+            if (radarRadiusCircle) {
+                radarRadiusCircle.setLatLng([userCoords.lat, userCoords.lng]);
+                radarRadiusCircle.setRadius(currentRadarRadius);
+            } else {
+                radarRadiusCircle = L.circle([userCoords.lat, userCoords.lng], {
+                    radius: currentRadarRadius,
+                    color: '#E63956',
+                    weight: 1.5,
+                    dashArray: '5, 8',
+                    fillColor: '#E63956',
+                    fillOpacity: 0.05
+                }).addTo(radarMap);
+            }
+        }
+
+        // Solicitar GPS real al dispositivo
+        function solicitarGeolocalizacionUsuario(esSilencioso = false) {
+            const gpsText = document.getElementById('radar-gps-text');
+            if (gpsText && !esSilencioso) gpsText.innerText = "GPS: Conectando satélites...";
+
+            if (!navigator.geolocation) {
+                aplicarUbicacionFallback("GPS no soportado en navegador");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    userCoords = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude
+                    };
+                    userAccuracy = Math.round(pos.coords.accuracy || 15);
+                    isRealGPS = true;
+
+                    if (gpsText) {
+                        gpsText.innerText = `GPS Real: ${userCoords.lat.toFixed(3)}, ${userCoords.lng.toFixed(3)} (±${userAccuracy}m)`;
+                    }
+
+                    const gpsPill = document.getElementById('radar-gps-pill');
+                    if (gpsPill) {
+                        gpsPill.style.borderColor = "var(--accent-green)";
+                        gpsPill.style.color = "var(--accent-green)";
+                    }
+
+                    if (radarMap) {
+                        radarMap.flyTo([userCoords.lat, userCoords.lng], calcularZoomPorRadio(currentRadarRadius), {
+                            duration: 1.2
+                        });
+                        crearMarcadorUsuario();
+                    }
+
+                    recalcularPosicionesAmenazas();
+                    renderizarAmenazasEnMapa();
+                    renderizarFeedAmenazas();
+                    actualizarDossierAmenaza(selectedThreatId);
+                    actualizarHudCoordenadas();
+
+                    if (!esSilencioso) {
+                        sonarPing();
+                        mostrarToast("📍 GPS Real adquirido con precisión");
+                    }
+                },
+                (err) => {
+                    console.warn("Geolocalización rechazada o bloqueada:", err.message);
+                    aplicarUbicacionFallback(esSilencioso ? "Modo Táctico Palermo" : "Permiso GPS denegado. Modo Palermo activo");
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 7000,
+                    maximumAge: 30000
+                }
+            );
+        }
+        window.solicitarGeolocalizacionUsuario = solicitarGeolocalizacionUsuario;
+
+        function centrarEnUbicacionUsuario() {
+            sonarPing();
+            solicitarGeolocalizacionUsuario(false);
+            if (radarMap) {
+                radarMap.flyTo([userCoords.lat, userCoords.lng], calcularZoomPorRadio(currentRadarRadius), {
+                    duration: 1.0
+                });
+            }
+        }
+        window.centrarEnUbicacionUsuario = centrarEnUbicacionUsuario;
+
+        function aplicarUbicacionFallback(mensaje) {
+            const gpsText = document.getElementById('radar-gps-text');
+            if (gpsText) {
+                gpsText.innerText = `📍 Perímetro Táctico: Palermo Soho`;
+            }
+            const gpsPill = document.getElementById('radar-gps-pill');
+            if (gpsPill) {
+                gpsPill.style.borderColor = "rgba(0, 210, 255, 0.4)";
+                gpsPill.style.color = "var(--accent-cyan)";
+            }
+            if (radarMap) {
+                crearMarcadorUsuario();
+            }
+            recalcularPosicionesAmenazas();
+            renderizarAmenazasEnMapa();
+            renderizarFeedAmenazas();
+            actualizarDossierAmenaza(selectedThreatId);
+            actualizarHudCoordenadas();
+        }
+
+        function calcularZoomPorRadio(radioMetros) {
+            if (radioMetros <= 600) return 16;
+            if (radioMetros <= 1800) return 15;
+            return 14;
+        }
+
+        // Recalcular posiciones lat/lng de cada amenaza según radio y jitter
+        function recalcularPosicionesAmenazas(randomJitter = false) {
+            calculatedThreats = THREATS_CATALOG.map((t, idx) => {
+                // Jitter aleatorio leve al re-escanear
+                const jitterDist = randomJitter ? (Math.random() * 0.12 - 0.06) : 0;
+                const jitterAngle = randomJitter ? (Math.random() * 20 - 10) : 0;
+
+                const ratio = Math.max(0.2, Math.min(0.95, t.ratioDistance + jitterDist));
+                const distanciaMetros = Math.round(currentRadarRadius * ratio);
+                const angulo = (t.bearing + jitterAngle + 360) % 360;
+
+                const pos = calcularOffsetCoordenadas(userCoords.lat, userCoords.lng, distanciaMetros, angulo);
+
+                return {
+                    ...t,
+                    lat: pos.lat,
+                    lng: pos.lng,
+                    distanciaMetros: distanciaMetros
+                };
+            });
+
+            // Ordenar por distancia
+            calculatedThreats.sort((a, b) => a.distanciaMetros - b.distanciaMetros);
+        }
+
+        // Renderizar marcadores de amenazas en el mapa Leaflet
+        function renderizarAmenazasEnMapa() {
+            if (!radarThreatLayer || !radarMap) return;
+
+            radarThreatLayer.clearLayers();
+
+            const amenazasVisibles = calculatedThreats.filter(t => {
+                if (currentThreatFilter === 'todos') return true;
+                return t.categoria === currentThreatFilter;
+            });
+
+            amenazasVisibles.forEach(t => {
+                const isSelected = t.id === selectedThreatId;
+                const markerHtml = `
+                    <div class="threat-marker-wrapper ${isSelected ? 'selected' : ''}" style="--threat-color: ${t.color}">
+                        <div class="threat-beacon-ring"></div>
+                        <div class="threat-marker-pin">${t.icon}</div>
+                        <div class="threat-label-pill">
+                            <span>${t.shortName}</span>
+                            <span class="threat-pct-tag">${t.dangerPct}%</span>
+                        </div>
+                    </div>
+                `;
+
+                const threatIcon = L.divIcon({
+                    className: 'threat-radar-divicon',
+                    html: markerHtml,
+                    iconSize: [48, 52],
+                    iconAnchor: [24, 46]
+                });
+
+                const marker = L.marker([t.lat, t.lng], {
+                    icon: threatIcon,
+                    zIndexOffset: isSelected ? 500 : 100
+                });
+
+                marker.on('click', () => {
+                    seleccionarAmenaza(t.id, false);
+                });
+
+                radarThreatLayer.addLayer(marker);
+            });
+
+            // Actualizar contador en HUD
+            const scanModeEl = document.getElementById('hud-scan-count');
+            if (scanModeEl) {
+                scanModeEl.innerText = `RADAR: ${amenazasVisibles.length} CONTACTOS EN ZONA`;
+            }
+        }
+
+        // Renderizar feed de amenazas en tarjetas
+        function renderizarFeedAmenazas() {
+            const feedContainer = document.getElementById('threats-list-cards');
+            const badgeCount = document.getElementById('threats-feed-count-badge');
+            if (!feedContainer) return;
+
+            const amenazasVisibles = calculatedThreats.filter(t => {
+                if (currentThreatFilter === 'todos') return true;
+                return t.categoria === currentThreatFilter;
+            });
+
+            if (badgeCount) {
+                badgeCount.innerText = `${amenazasVisibles.length} en radio`;
+            }
+
+            feedContainer.innerHTML = amenazasVisibles.map(t => {
+                const isActive = t.id === selectedThreatId;
+                const distTxt = t.distanciaMetros >= 1000 
+                    ? `${(t.distanciaMetros / 1000).toFixed(1)} km` 
+                    : `${t.distanciaMetros} m`;
+
+                return `
+                    <div class="threat-list-item ${isActive ? 'active' : ''}" onclick="seleccionarAmenaza('${t.id}', true)">
+                        <div class="threat-item-left">
+                            <div class="threat-item-icon">${t.icon}</div>
+                            <div class="threat-item-info">
+                                <div class="threat-item-name">${t.name}</div>
+                                <div class="threat-item-meta">
+                                    <span>📍 a ${distTxt}</span>
+                                    <span>•</span>
+                                    <span style="color: ${t.color};">${t.shortName}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="threat-item-danger" style="color: ${t.color}; background: ${hexToRgba(t.color, 0.14)};">
+                            ${t.dangerPct}%
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Actualizar el dossier de la amenaza seleccionada
+        function actualizarDossierAmenaza(id) {
+            selectedThreatId = id;
+            const threat = calculatedThreats.find(t => t.id === id) || calculatedThreats[0];
+            if (!threat) return;
+
+            const dossierCard = document.getElementById('threat-dossier-card');
+            if (!dossierCard) return;
+
+            dossierCard.style.setProperty('--threat-color', threat.color);
+
+            const distTxt = threat.distanciaMetros >= 1000 
+                ? `${(threat.distanciaMetros / 1000).toFixed(1)} km` 
+                : `${threat.distanciaMetros} metros`;
+
+            dossierCard.innerHTML = `
+                <div class="dossier-header">
+                    <div class="dossier-title-group">
+                        <div class="dossier-icon-box" style="border-color: ${threat.color}; box-shadow: 0 0 16px ${hexToRgba(threat.color, 0.25)};">
+                            ${threat.icon}
+                        </div>
+                        <div>
+                            <div class="dossier-name">${threat.name}</div>
+                            <div class="dossier-distance">
+                                <span>📍 a ${distTxt} de tu ubicación</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dossier-risk-badge" style="color: ${threat.color}; background: ${hexToRgba(threat.color, 0.15)}; border-color: ${hexToRgba(threat.color, 0.4)};">
+                        🚨 ${threat.dangerPct}% RIESGO
+                    </div>
+                </div>
+
+                <div class="dossier-risk-bar-container">
+                    <div class="risk-bar-track" style="margin: 0;">
+                        <div class="risk-bar-fill" style="width: ${threat.dangerPct}%; background: linear-gradient(90deg, var(--accent-cyan), ${threat.color});"></div>
+                    </div>
+                </div>
+
+                <div class="dossier-quote-box">
+                    <span class="quote-icon">💬</span>
+                    <span>«${threat.frase}»</span>
+                </div>
+
+                <div class="dossier-intel-grid">
+                    <div class="dossier-intel-item">
+                        <strong>🎯 Patrón de Comportamiento:</strong> ${threat.analisis}
+                    </div>
+                    <div class="dossier-intel-item">
+                        <strong>🛡️ Protocolo de Evasión Recomendado:</strong> ${threat.protocolo}
+                    </div>
+                </div>
+
+                <div class="dossier-actions">
+                    <button type="button" class="dossier-action-btn primary" onclick="activarProtocoloDesdeAmenaza('${threat.shieldAction}')">
+                        <span style="font-size: 1.1rem;">🛡️</span>
+                        <span>Defense Shield</span>
+                    </button>
+                    <button type="button" class="dossier-action-btn" onclick="iniciarCoachingDesdeAmenaza('${threat.coachingId}')">
+                        <span style="font-size: 1.1rem;">📞</span>
+                        <span>Pedir Coaching</span>
+                    </button>
+                    <button type="button" class="dossier-action-btn" onclick="copiarProtocoloAmenaza('${escapeHtml(threat.protocolo)}')">
+                        <span style="font-size: 1.1rem;">📋</span>
+                        <span>Copiar Protocolo</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Seleccionar amenaza y enfocarla en el mapa
+        function seleccionarAmenaza(id, volarAlPunto = false) {
+            selectedThreatId = id;
+            sonarPing();
+            actualizarDossierAmenaza(id);
+            renderizarAmenazasEnMapa();
+            renderizarFeedAmenazas();
+
+            if (volarAlPunto && radarMap) {
+                const target = calculatedThreats.find(t => t.id === id);
+                if (target) {
+                    radarMap.flyTo([target.lat, target.lng], radarMap.getZoom(), {
+                        duration: 0.8
+                    });
+                }
+            }
+
+            // Asegurar que el dossier sea visible al seleccionar
+            const dossier = document.getElementById('threat-dossier-card');
+            if (dossier && !volarAlPunto) {
+                dossier.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        window.seleccionarAmenaza = seleccionarAmenaza;
+
+        // Cambiar radio de búsqueda del radar (500m, 1.5km, 3km)
+        function cambiarRadioRadar(metros, btn) {
+            sonarPing();
+            currentRadarRadius = metros;
+
+            document.querySelectorAll('.radius-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (radarRadiusCircle) {
+                radarRadiusCircle.setRadius(metros);
+            }
+
+            if (radarMap) {
+                radarMap.flyTo([userCoords.lat, userCoords.lng], calcularZoomPorRadio(metros), {
+                    duration: 0.9
+                });
+            }
+
+            recalcularPosicionesAmenazas();
+            renderizarAmenazasEnMapa();
+            renderizarFeedAmenazas();
+            actualizarDossierAmenaza(selectedThreatId);
+
+            mostrarToast(`📡 Radio de radar ajustado a ${metros >= 1000 ? (metros/1000) + ' km' : metros + ' m'}`);
+        }
+        window.cambiarRadioRadar = cambiarRadioRadar;
+
+        // Filtrar amenazas por categoría
+        function filtrarAmenazasRadar(cat, btn) {
+            sonarPing();
+            currentThreatFilter = cat;
+
+            document.querySelectorAll('.threat-filter-chip').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            renderizarAmenazasEnMapa();
+            renderizarFeedAmenazas();
+
+            // Si la amenaza seleccionada quedó filtrada, seleccionar la primera visible
+            const visibles = calculatedThreats.filter(t => cat === 'todos' || t.categoria === cat);
+            if (visibles.length > 0 && !visibles.some(t => t.id === selectedThreatId)) {
+                actualizarDossierAmenaza(visibles[0].id);
+            }
+        }
+        window.filtrarAmenazasRadar = filtrarAmenazasRadar;
+
+        // Re-escanear perímetro con animación de barrido
+        function reescanearPerimetro() {
+            sonarPing();
+            const scanStatus = document.getElementById('radar-scan-status-text');
+            if (scanStatus) scanStatus.innerText = "SINTONIZANDO SEÑALES TÁCTICAS...";
+
+            const sweepBeam = document.getElementById('radar-sweep-beam');
+            if (sweepBeam) {
+                sweepBeam.style.animation = 'none';
+                void sweepBeam.offsetWidth; // trigger reflow
+                sweepBeam.style.animation = 'radarBeamRotate 3.5s linear infinite';
+            }
+
+            setTimeout(() => {
+                recalcularPosicionesAmenazas(true);
+                renderizarAmenazasEnMapa();
+                renderizarFeedAmenazas();
+                actualizarDossierAmenaza(selectedThreatId);
+                if (scanStatus) scanStatus.innerText = "BARRIDO ACTIVO // 432MHz";
+                mostrarToast("⚡ Perímetro re-escaneado con éxito");
+            }, 600);
+        }
+        window.reescanearPerimetro = reescanearPerimetro;
+
+        // Activar/desactivar overlay de barrido HUD
+        function toggleRadarSweepOverlay() {
+            radarSweepEnabled = !radarSweepEnabled;
+            const sweepBeam = document.getElementById('radar-sweep-beam');
+            const btn = document.getElementById('btn-toggle-sweep');
+            if (sweepBeam) {
+                sweepBeam.classList.toggle('hidden', !radarSweepEnabled);
+            }
+            if (btn) {
+                btn.style.color = radarSweepEnabled ? 'var(--accent-cyan)' : 'var(--text-muted)';
+            }
+            mostrarToast(radarSweepEnabled ? "💫 Efecto HUD activado" : "Efecto HUD desactivado");
+        }
+        window.toggleRadarSweepOverlay = toggleRadarSweepOverlay;
+
+        // Enlazar amenaza con Defense Shield
+        function activarProtocoloDesdeAmenaza(protocoloKey) {
+            const navShieldBtn = document.querySelectorAll('.nav-item')[2];
+            switchTab('screen-shield', navShieldBtn);
+
+            // Buscar chip correspondiente y activarlo
+            setTimeout(() => {
+                const chips = document.querySelectorAll('.protocol-chip');
+                chips.forEach(chip => {
+                    const onclickStr = chip.getAttribute('onclick') || '';
+                    if (onclickStr.includes(`'${protocoloKey}'`)) {
+                        seleccionarProtocolo(protocoloKey, chip);
+                    }
+                });
+                mostrarToast(`🛡️ Protocolo "${protocoloKey.toUpperCase()}" activado`);
+            }, 100);
+        }
+        window.activarProtocoloDesdeAmenaza = activarProtocoloDesdeAmenaza;
+
+        // Enlazar amenaza con Coaching de Emergencia
+        function iniciarCoachingDesdeAmenaza(coachId) {
+            const navCoachingBtn = document.querySelectorAll('.nav-item')[3];
+            switchTab('screen-coaching', navCoachingBtn);
+
+            setTimeout(() => {
+                if (typeof seleccionarVideoAleatorio === 'function') {
+                    seleccionarVideoAleatorio();
+                }
+                if (typeof iniciarVideollamada === 'function') {
+                    iniciarVideollamada();
+                }
+            }, 150);
+        }
+        window.iniciarCoachingDesdeAmenaza = iniciarCoachingDesdeAmenaza;
+
+        // Copiar protocolo de evasión
+        function copiarProtocoloAmenaza(texto) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    mostrarToast("✅ Protocolo de evasión copiado");
+                }).catch(() => {
+                    mostrarToast("Seleccioná el texto para copiar");
+                });
+            } else {
+                mostrarToast("Protocolo listo para ejecutar");
+            }
+        }
+        window.copiarProtocoloAmenaza = copiarProtocoloAmenaza;
+
+        function scrollHaciaDossier() {
+            const dossier = document.getElementById('threat-dossier-card');
+            if (dossier) {
+                dossier.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        window.scrollHaciaDossier = scrollHaciaDossier;
+
+        function actualizarHudCoordenadas() {
+            const hud = document.getElementById('hud-coordinates-text');
+            if (hud) {
+                hud.innerText = `LAT: ${userCoords.lat.toFixed(4)}° | LON: ${userCoords.lng.toFixed(4)}° // TACTICAL GRID`;
+            }
+        }
+
+        function hexToRgba(hex, alpha) {
+            let c;
+            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+                c = hex.substring(1).split('');
+                if (c.length === 3) {
+                    c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c = '0x' + c.join('');
+                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
+            }
+            return hex;
+        }
+
+        function escapeHtml(str) {
+            return (str || '')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ========================================================
+        // 2.B DIAGNÓSTICO CONDUCTUAL MANUAL (ACORDEÓN)
+        // ========================================================
+        function ejecutarEscaneo() {
+            const total = document.querySelectorAll('.chk-risk').length;
+            const checked = document.querySelectorAll('.chk-risk:checked').length;
+            const res = document.getElementById('res-scanner');
+            const pct = Math.round((checked / total) * 100);
+
+            // Actualizar barra de progreso y valor
+            const barFill = document.getElementById('risk-bar-fill');
+            const pctVal = document.getElementById('risk-pct-value');
+            if (barFill) barFill.style.width = pct + "%";
+            if (pctVal) pctVal.innerText = pct + "%";
+            
+            if (!res) return;
+
+            if (pct === 0) {
+                res.innerHTML = "<strong>✅ 0% RIESGO:</strong> Zona despejada. Podés hablar tranqui, pero sin regalarte.";
+                res.style.borderLeftColor = "var(--accent-green)";
+            } else if (pct <= 40) {
+                res.innerHTML = `<strong>⚠️ ${pct}% RIESGO:</strong> Tatiana Moderada. Mantené la guardia alta y no contestes al segundo.`;
+                res.style.borderLeftColor = "var(--accent-cyan)";
+            } else if (pct <= 75) {
+                res.innerHTML = `<strong>🚨 ${pct}% RIESGO:</strong> ALERTA ALTA. Te va a arruinar el fin de semana y la estabilidad mental.`;
+                res.style.borderLeftColor = "var(--accent-gold)";
+            } else {
+                res.innerHTML = `<strong>⛔ ${pct}% WANDAGATE DETECTED:</strong> Peligro crítico nivel Chernobyl. Bloqueá ya mismo y andá al gym.`;
+                res.style.borderLeftColor = "var(--accent-pink)";
+            }
+        }
+        window.ejecutarEscaneo = ejecutarEscaneo;
+
+        // ========================================================
+        // 3. MÓDULO CHAT PARSER
+        // ========================================================
+        function cargarSampleChat(tipo) {
+            const input = document.getElementById('input-chat');
+            if (tipo === 'colgue') input.value = "Uf colgué mal con el celu perdón, anduve a las corridas!";
+            if (tipo === 'jaja') input.value = "jajaja de una, qué loco";
+            if (tipo === 'diferente') input.value = "Sos re diferente a todos/as posta, me das una paz enorme";
+            if (tipo === 'amigos') input.value = "Te quiero un montón pero no quiero arruinar la amistad que tenemos";
+            analizarChatApp();
+        }
+        window.cargarSampleChat = cargarSampleChat;
+
+        function analizarChatApp() {
+            const txt = (document.getElementById('input-chat').value || "").trim().toLowerCase();
+            const res = document.getElementById('res-chat-app');
+            if(!txt) { 
+                res.innerText = "Ingresá un texto válido o pegá el chat."; 
+                return; 
+            }
+            
+            if (txt.includes("colgué") || txt.includes("colgue") || txt.includes("después vemos") || txt.includes("despues vemos") || txt.includes("ando a full")) {
+                res.innerHTML = "<strong>⚠️ DIAGNÓSTICO:</strong> Desinterés activo con excusa genérica. Te tiene de suplente en el banco de relevos. Probabilidad de 'clavado de visto': 94%.";
+            } else if (txt.includes("jaja") || txt.includes("jajaja") || txt.length < 6) {
+                res.innerHTML = "<strong>🧊 DIAGNÓSTICO:</strong> Respuesta de cotillón / Píldora de descarte. Cero inversión de esfuerzo. Si respondés rápido quedás como un desesperado.";
+            } else if (txt.includes("sos re") || txt.includes("sos diferente") || txt.includes("nunca me pasó")) {
+                res.innerHTML = "<strong>🚨 DIAGNÓSTICO:</strong> Love bombing clásico o chamuyo industrial para inflarte el ego y después ghostearte. Procedé con chaleco antibalas.";
+            } else {
+                res.innerHTML = "<strong>✔️ DIAGNÓSTICO:</strong> Mensaje neutro. No regales stickers innecesarios ni audios de 3 minutos. Sé conciso/a.";
+            }
+        }
+        window.analizarChatApp = analizarChatApp;
+
+        // ========================================================
+        // 4. MÓDULO DEFENSE SHIELD
+        // ========================================================
+        const excusasDB = {
+            cancelar: [
+                "Uf colgué mal, me surgió una urgencia familiar re pesada. Te aviso apenas me desocupe!",
+                "Perdón el cuelgue! Se me complicó el día en el laburo y no llego a tiempo. Lo dejamos para la próxima."
+            ],
+            visto: [
+                "Mala mía! Estuve con mil cosas del laburo y me quedó la notificación abajo de todo.",
+                "Uy recién leo esto, anduve sin el celu encima en todo el día."
+            ],
+            ghostear: [
+                "La pasé re lindo pero ando en una etapa con cero energía para encarar algo activo. Te deseo lo mejor!",
+                "Todo bien pero siento que buscamos cosas distintas. Un beso y que andes bien!"
+            ],
+            picante: [
+                "¿Tanta mala fama te hacen y al final tardás 5 horas en responder? Tranqui que no muerdo eh.",
+                "Tranqui, avisame cuando tengas wifi que se ve que anda con demora."
+            ],
+            desinteres: [
+                "Jajaja de una, tranqui. Después si llego te aviso.",
+                "Jaja joya, vemos qué onda el finde."
+            ],
+            amigos: [
+                "Sos un amor posta, te re quiero pero como amigo/a con quien tomar una birra y charlar de la vida.",
+                "Te tengo un aprecio enorme como amigo/a, no me gustaría confundir las cosas."
+            ]
+        };
+        let protocoloActual = "cancelar";
+        let payloadActual = "";
+
+        function seleccionarProtocolo(tipo, elemento) {
+            protocoloActual = tipo;
+            document.querySelectorAll('.protocol-chip').forEach(c => c.classList.remove('active'));
+            if (elemento) elemento.classList.add('active');
+            generarShield();
+        }
+        window.seleccionarProtocolo = seleccionarProtocolo;
+
+        function generarShield() {
+            const opciones = excusasDB[protocoloActual] || excusasDB.cancelar;
+            const random = opciones[Math.floor(Math.random() * opciones.length)];
+            payloadActual = random;
+            document.getElementById('res-shield').innerText = payloadActual;
+            mostrarToast("⚡ Nueva respuesta generada");
+        }
+        window.generarShield = generarShield;
+
+        function copiarShield() {
+            if(!payloadActual) {
+                payloadActual = document.getElementById('res-shield').innerText;
+            }
+            if(payloadActual && !payloadActual.includes("Seleccioná un protocolo")) {
+                navigator.clipboard.writeText(payloadActual).then(() => {
+                    mostrarToast("✅ ¡Copiado al portapapeles!");
+                }).catch(() => {
+                    mostrarToast("Seleccioná el texto para copiar");
+                });
+            }
+        }
+        window.copiarShield = copiarShield;
+
+        // ========================================================
+        // 5. MÓDULO ESCÁNER DE AURA AR (REALIDAD AUMENTADA 100% VANILLA)
+        // ========================================================
+        const aurasDB = [
+            {
+                id: "diablo",
+                badge: "😈 DIABLO / DIABLA",
+                badgeColor: "#E63956",
+                freq: "666 Hz • PELIGRO EXTREMO",
+                titulo: "Aura Carmesí de Manipulación & Caos",
+                descripcion: "Peligro inminente: Clava el visto 3 días, vuelve un domingo a las 23:30 con un 'te acordás de mí?' y te desestabiliza emocionalmente. Cero apego seguro, 100% adrenalina destructiva.",
+                auraEdgeColor: "rgba(230, 57, 86, 0.42)",
+                auraOuterColor: "rgba(242, 84, 109, 0.12)",
+                propType: "horns"
+            },
+            {
+                id: "toxico",
+                badge: "☣️ TÓXICO / TÓXICA RADIACTIVO",
+                badgeColor: "#10B981",
+                freq: "999 mSv • ZONA DE EVACUACIÓN",
+                titulo: "Aura Verde Ácida de Reclamos Fantasma",
+                descripcion: "Revisa tus seguidos cada 40 minutos, te hace planteos por cosas que soñó anoche y aplica la ley del hielo sin dar explicaciones. Alejate con traje HAZMAT antes de que sea tarde.",
+                auraEdgeColor: "rgba(16, 185, 129, 0.42)",
+                auraOuterColor: "rgba(52, 211, 153, 0.12)",
+                propType: "biohazard"
+            },
+            {
+                id: "angel",
+                badge: "😇 ÁNGEL / INOCENCIA RARA",
+                badgeColor: "#F59E0B",
+                freq: "528 Hz • PUREZA CERTIFICADA",
+                titulo: "Aura Celestial de Responsabilidad Afectiva",
+                descripcion: "Especie en peligro de extinción: Si dice que te escribe a las 8, te escribe a las 8. Propone planes concretos, es transparente y no te triangula con su ex. Cuidalo/a como oro.",
+                auraEdgeColor: "rgba(245, 158, 11, 0.42)",
+                auraOuterColor: "rgba(251, 191, 36, 0.12)",
+                propType: "halo"
+            },
+            {
+                id: "pollera",
+                badge: "🐕 POLLERA SUPREMO",
+                badgeColor: "#D1495B",
+                freq: "0.0 Hz • SIN AUTONOMÍA",
+                titulo: "Aura Rosa Chicle de Sumisión Total",
+                descripcion: "Para salir a tomar una birra tiene que mandar memorándum por triplicado con 72hs de anticipación. En el bar mira el reloj a cada rato y a las 21:30 ya se fue a dormir con la jefa.",
+                auraEdgeColor: "rgba(209, 73, 91, 0.42)",
+                auraOuterColor: "rgba(230, 74, 98, 0.12)",
+                propType: "lock"
+            },
+            {
+                id: "fiel",
+                badge: "💎 FIEL & LEAL / CÓDIGO DE HONOR",
+                badgeColor: "#E64A62",
+                freq: "888 Hz • LEALTAD TOTAL",
+                titulo: "Aura Zafiro de Lealtad Inquebrantable",
+                descripcion: "Deja el celular boca arriba en la mesa sin una gota de sudor. No tiene chats archivados ni fotos en la papelera. Si está con vos, el resto del planeta es invisible.",
+                auraEdgeColor: "rgba(230, 74, 98, 0.42)",
+                auraOuterColor: "rgba(242, 84, 109, 0.12)",
+                propType: "crown"
+            }
+        ];
+
+        let auraStream = null;
+        let auraFacingMode = "environment"; // Prioriza cámara trasera para enfocar al objetivo
+        let auraState = "idle"; // 'idle' | 'scanning' | 'revealed'
+        let auraActual = null;
+        let auraAnimationId = null;
+        let scanInterval = null;
+        let scanStartTime = 0;
+        const SCAN_DURATION_MS = 2400;
+
+        // Partículas orbitales del aura (orbitan exclusivamente en el perímetro para no tapar la cara)
+        const auraParticles = Array.from({ length: 22 }, () => ({
+            radius: Math.random() * 3 + 1.8,
+            angle: Math.random() * Math.PI * 2,
+            dist: Math.random() * 55 + 115,
+            speed: Math.random() * 0.02 + 0.01,
+            alpha: Math.random() * 0.6 + 0.35
+        }));
+
+        async function iniciarCamaraAura() {
+            const videoEl = document.getElementById('aura-camera-feed');
+            const fallbackEl = document.getElementById('aura-camera-fallback');
+            const canvasEl = document.getElementById('aura-canvas');
+
+            if (!videoEl || !canvasEl) return;
+
+            detenerCamaraAura();
+            iniciarLoopAura();
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                if (fallbackEl) fallbackEl.style.display = 'flex';
+                mostrarToast("ℹ️ Tu dispositivo no permite acceso a cámara");
+                return;
+            }
+
+            try {
+                auraStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: { ideal: auraFacingMode },
+                        width: { ideal: 720 },
+                        height: { ideal: 960 }
+                    },
+                    audio: false
+                });
+
+                videoEl.srcObject = auraStream;
+                await videoEl.play();
+                if (fallbackEl) fallbackEl.style.display = 'none';
+            } catch (err) {
+                console.warn("Fallo cámara con facingMode:", auraFacingMode, err);
+                try {
+                    auraStream = await navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: false
+                    });
+                    videoEl.srcObject = auraStream;
+                    await videoEl.play();
+                    if (fallbackEl) fallbackEl.style.display = 'none';
+                } catch (fallbackErr) {
+                    console.warn("Permiso de cámara denegado:", fallbackErr);
+                    if (fallbackEl) fallbackEl.style.display = 'flex';
+                    mostrarToast("📷 Habilitá la cámara para escanear a tus amigos");
+                }
+            }
+        }
+        window.iniciarCamaraAura = iniciarCamaraAura;
+
+        function detenerCamaraAura() {
+            if (auraStream) {
+                auraStream.getTracks().forEach(track => track.stop());
+                auraStream = null;
+            }
+            const videoEl = document.getElementById('aura-camera-feed');
+            if (videoEl) videoEl.srcObject = null;
+            const fallbackEl = document.getElementById('aura-camera-fallback');
+            if (fallbackEl) fallbackEl.style.display = 'flex';
+        }
+        window.detenerCamaraAura = detenerCamaraAura;
+
+        function alternarCamaraAura() {
+            auraFacingMode = (auraFacingMode === "environment") ? "user" : "environment";
+            mostrarToast(auraFacingMode === "user" ? "🤳 Modo Selfie (Frontal)" : "📷 Modo Objetivo (Trasera)");
+            iniciarCamaraAura();
+        }
+        window.alternarCamaraAura = alternarCamaraAura;
+
+        function iniciarLoopAura() {
+            if (auraAnimationId) cancelAnimationFrame(auraAnimationId);
+
+            const canvas = document.getElementById('aura-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            function render() {
+                const w = canvas.clientWidth || 360;
+                const h = canvas.clientHeight || 520;
+                if (canvas.width !== w || canvas.height !== h) {
+                    canvas.width = w;
+                    canvas.height = h;
+                }
+
+                ctx.clearRect(0, 0, w, h);
+
+                const centerX = w / 2;
+                const centerY = h * 0.44;
+                const time = Date.now() / 1000;
+
+                if (auraState === "idle" || auraState === "scanning") {
+                    dibujarHudTactico(ctx, centerX, centerY, w, h, time);
+                }
+
+                if (auraState === "revealed" && auraActual) {
+                    dibujarAuraAR(ctx, centerX, centerY, w, h, time, auraActual);
+                }
+
+                auraAnimationId = requestAnimationFrame(render);
+            }
+
+            render();
+        }
+
+        function dibujarHudTactico(ctx, cx, cy, w, h, time) {
+            ctx.save();
+            const pulse = (Math.sin(time * 3) + 1) / 2;
+            const size = 95;
+
+            ctx.strokeStyle = `rgba(0, 210, 255, ${0.25 + pulse * 0.25})`;
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([4, 6]);
+            ctx.beginPath();
+            ctx.arc(cx, cy, size * 0.85, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            ctx.font = '10px "JetBrains Mono", monospace';
+            ctx.fillStyle = 'rgba(0, 210, 255, 0.75)';
+            ctx.textAlign = 'left';
+            ctx.fillText(`TARGET_LOCK: ${Math.floor(82 + pulse * 17)}%`, cx - size * 0.78, cy + size + 20);
+            ctx.fillText(`CHAMUYO_FREQ: ${(432 + Math.sin(time * 2) * 12).toFixed(1)}Hz`, cx - size * 0.78, cy + size + 34);
+
+            ctx.restore();
+        }
+
+        function dibujarAuraAR(ctx, cx, cy, w, h, time, aura) {
+            ctx.save();
+
+            const pulse = (Math.sin(time * 3.5) + 1) / 2; // oscilación suave 0 a 1
+            const auraPeakRadius = 132 + pulse * 10;
+            const outerFadeRadius = 184 + pulse * 12;
+
+            ctx.globalCompositeOperation = 'screen';
+
+            // Gradiente anular translúcido:
+            // 0% a 50%: Totalmente transparente para que la persona y su rostro se vean cristalinos
+            // 50% a 78%: El aura surge translúcida en los bordes
+            // 78% a 100%: Se difumina suavemente hacia el exterior
+            const auraGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, outerFadeRadius);
+            auraGrad.addColorStop(0, 'rgba(0, 0, 0, 0)');
+            auraGrad.addColorStop(0.48, 'rgba(0, 0, 0, 0)');
+            auraGrad.addColorStop(0.74, aura.auraEdgeColor);
+            auraGrad.addColorStop(0.90, aura.auraOuterColor);
+            auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            ctx.fillStyle = auraGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, outerFadeRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Anillo etéreo sutil y ondulante en el contorno del aura
+            ctx.strokeStyle = aura.badgeColor;
+            ctx.lineWidth = 1.6;
+            ctx.globalAlpha = 0.35 + pulse * 0.22;
+            ctx.setLineDash([10, 14]);
+            ctx.beginPath();
+            ctx.arc(cx, cy, auraPeakRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Partículas flotando exclusivamente en el borde exterior
+            auraParticles.forEach((p, idx) => {
+                p.angle += p.speed;
+                const dist = p.dist + Math.sin(time * 2 + idx) * 8;
+                const px = cx + Math.cos(p.angle) * dist;
+                const py = cy + Math.sin(p.angle) * dist * 0.88;
+
+                ctx.fillStyle = aura.badgeColor;
+                ctx.globalAlpha = p.alpha * (0.35 + pulse * 0.25);
+                ctx.beginPath();
+                ctx.arc(px, py, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.globalAlpha = 1;
+            ctx.globalCompositeOperation = 'source-over';
+
+            // Props flotando sobre la cabeza
+            const headY = cy - 85;
+
+            if (aura.propType === "horns") {
+                dibujarCuernosDiablo(ctx, cx, headY, time);
+            } else if (aura.propType === "halo") {
+                dibujarHaloAngel(ctx, cx, headY - 18, time);
+            } else if (aura.propType === "biohazard") {
+                dibujarBiohazard(ctx, cx, headY - 10, time);
+            } else if (aura.propType === "lock") {
+                dibujarCorazonCandado(ctx, cx, headY - 10, time);
+            } else if (aura.propType === "crown") {
+                dibujarCoronaFiel(ctx, cx, headY - 14, time);
+            }
+
+            ctx.restore();
+        }
+
+        function dibujarCuernosDiablo(ctx, cx, cy, time) {
+            ctx.save();
+            ctx.shadowColor = '#ff1a53';
+            ctx.shadowBlur = 18;
+            ctx.fillStyle = '#ff1a53';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(cx - 32, cy + 10);
+            ctx.quadraticCurveTo(cx - 52, cy - 25, cx - 46, cy - 50);
+            ctx.quadraticCurveTo(cx - 30, cy - 25, cx - 18, cy + 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(cx + 32, cy + 10);
+            ctx.quadraticCurveTo(cx + 52, cy - 25, cx + 46, cy - 50);
+            ctx.quadraticCurveTo(cx + 30, cy - 25, cx + 18, cy + 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function dibujarHaloAngel(ctx, cx, cy, time) {
+            ctx.save();
+            const hoverY = cy + Math.sin(time * 3) * 6;
+
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 24;
+            ctx.strokeStyle = '#fff5a0';
+            ctx.lineWidth = 5;
+
+            ctx.beginPath();
+            ctx.ellipse(cx, hoverY, 48, 14, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.ellipse(cx, hoverY, 48, 14, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            const starX = cx + Math.cos(time * 2) * 38;
+            const starY = hoverY + Math.sin(time * 2) * 8;
+            dibujarEstrella4Puntas(ctx, starX, starY, 6);
+
+            ctx.restore();
+        }
+
+        function dibujarBiohazard(ctx, cx, cy, time) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(time * 0.8);
+            ctx.shadowColor = '#00f59b';
+            ctx.shadowBlur = 20;
+            ctx.strokeStyle = '#00f59b';
+            ctx.lineWidth = 3.5;
+
+            ctx.beginPath();
+            ctx.arc(0, 0, 32, 0, Math.PI * 2);
+            ctx.stroke();
+
+            for (let i = 0; i < 3; i++) {
+                const angle = (i * 2 * Math.PI) / 3;
+                const bx = Math.cos(angle) * 16;
+                const by = Math.sin(angle) * 16;
+                ctx.beginPath();
+                ctx.arc(bx, by, 14, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function dibujarCorazonCandado(ctx, cx, cy, time) {
+            ctx.save();
+            const bounce = Math.sin(time * 4) * 4;
+            ctx.translate(cx, cy + bounce);
+            ctx.shadowColor = '#ff4081';
+            ctx.shadowBlur = 22;
+
+            ctx.fillStyle = '#ff4081';
+            ctx.beginPath();
+            ctx.moveTo(0, 10);
+            ctx.bezierCurveTo(-26, -18, -36, 12, 0, 36);
+            ctx.bezierCurveTo(36, 12, 26, -18, 0, 10);
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-7, 10, 14, 12);
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(0, 10, 5, Math.PI, 0);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function dibujarCoronaFiel(ctx, cx, cy, time) {
+            ctx.save();
+            const hover = Math.sin(time * 3) * 5;
+            ctx.translate(cx, cy + hover);
+            ctx.shadowColor = '#00d2ff';
+            ctx.shadowBlur = 22;
+            ctx.fillStyle = '#00d2ff';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+
+            ctx.beginPath();
+            ctx.moveTo(-36, 12);
+            ctx.lineTo(-32, -18);
+            ctx.lineTo(-16, -2);
+            ctx.lineTo(0, -28);
+            ctx.lineTo(16, -2);
+            ctx.lineTo(32, -18);
+            ctx.lineTo(36, 12);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            [-32, 0, 32].forEach(px => {
+                const py = px === 0 ? -28 : -18;
+                ctx.beginPath();
+                ctx.arc(px, py, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.restore();
+        }
+
+        function dibujarEstrella4Puntas(ctx, x, y, r) {
+            ctx.beginPath();
+            ctx.moveTo(x, y - r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.quadraticCurveTo(x, y, x, y + r);
+            ctx.quadraticCurveTo(x, y, x - r, y);
+            ctx.quadraticCurveTo(x, y, x, y - r);
+            ctx.fill();
+        }
+
+        function dispararEscaneoAura() {
+            if (auraState === "scanning") return;
+
+            if (!auraStream) {
+                iniciarCamaraAura();
+            }
+
+            auraState = "scanning";
+
+            if (navigator.vibrate) {
+                navigator.vibrate([40, 60, 40]);
+            }
+
+            const overlay = document.getElementById('aura-scan-overlay');
+            const phaseEl = document.getElementById('aura-scan-phase');
+            const fillEl = document.getElementById('aura-progress-fill');
+            const pctEl = document.getElementById('aura-scan-pct');
+            const hudBottom = document.getElementById('aura-hud-bottom');
+            const btnTrigger = document.getElementById('btn-scan-trigger');
+            const resultCard = document.getElementById('aura-result-card');
+
+            if (overlay) overlay.classList.add('scanning');
+            if (resultCard) resultCard.classList.remove('active');
+            if (hudBottom) hudBottom.style.display = 'none';
+            if (btnTrigger) btnTrigger.style.display = 'none';
+
+            scanStartTime = Date.now();
+            clearInterval(scanInterval);
+
+            scanInterval = setInterval(() => {
+                const elapsed = Date.now() - scanStartTime;
+                const progress = Math.min(100, Math.floor((elapsed / SCAN_DURATION_MS) * 100));
+
+                if (fillEl) fillEl.style.width = `${progress}%`;
+                if (pctEl) pctEl.innerText = `${progress}%`;
+
+                if (progress < 28) {
+                    if (phaseEl) phaseEl.innerText = "SINTONIZANDO VIBRACIÓN AFECTIVA...";
+                } else if (progress < 60) {
+                    if (phaseEl) phaseEl.innerText = "CALCULANDO COEFICIENTE DE TOXICIDAD...";
+                } else if (progress < 88) {
+                    if (phaseEl) phaseEl.innerText = "VERIFICANDO HISTORIAL DE CLAVADAS DE VISTO...";
+                } else {
+                    if (phaseEl) phaseEl.innerText = "¡DESENCRIPTANDO VERDADERA AURA!";
+                }
+
+                if (progress >= 100) {
+                    clearInterval(scanInterval);
+                    finalizarEscaneoAura();
+                }
+            }, 50);
+        }
+        window.dispararEscaneoAura = dispararEscaneoAura;
+
+        function finalizarEscaneoAura() {
+            auraState = "revealed";
+
+            if (navigator.vibrate) {
+                navigator.vibrate([80, 40, 120]);
+            }
+
+            let disponibles = aurasDB;
+            if (auraActual && aurasDB.length > 1) {
+                disponibles = aurasDB.filter(a => a.id !== auraActual.id);
+            }
+            auraActual = disponibles[Math.floor(Math.random() * disponibles.length)];
+
+            const overlay = document.getElementById('aura-scan-overlay');
+            if (overlay) overlay.classList.remove('scanning');
+
+            const badgeEl = document.getElementById('aura-result-badge');
+            const freqEl = document.getElementById('aura-result-freq');
+            const titleEl = document.getElementById('aura-result-title');
+            const descEl = document.getElementById('aura-result-desc');
+            const resultCard = document.getElementById('aura-result-card');
+            const hudBottom = document.getElementById('aura-hud-bottom');
+
+            if (hudBottom) hudBottom.style.display = 'none';
+
+            if (badgeEl) {
+                badgeEl.innerText = auraActual.badge;
+                badgeEl.style.color = auraActual.badgeColor;
+                badgeEl.style.borderColor = auraActual.badgeColor;
+                badgeEl.style.boxShadow = `0 0 14px ${auraActual.auraEdgeColor}`;
+            }
+            if (freqEl) freqEl.innerText = auraActual.freq;
+            if (titleEl) titleEl.innerText = auraActual.titulo;
+            if (descEl) descEl.innerText = auraActual.descripcion;
+
+            if (resultCard) {
+                resultCard.classList.add('active');
+            }
+
+            mostrarToast(`👁️ Aura detectada: ${auraActual.badge}`);
+        }
+
+        function resetearEscaneoAura() {
+            auraState = "idle";
+            const resultCard = document.getElementById('aura-result-card');
+            const hudBottom = document.getElementById('aura-hud-bottom');
+            const btnTrigger = document.getElementById('btn-scan-trigger');
+            const overlay = document.getElementById('aura-scan-overlay');
+
+            if (resultCard) resultCard.classList.remove('active');
+            if (overlay) overlay.classList.remove('scanning');
+            if (hudBottom) hudBottom.style.display = 'flex';
+            if (btnTrigger) {
+                btnTrigger.style.display = 'flex';
+                btnTrigger.innerText = '👁️ Escanear Aura';
+            }
+        }
+        window.resetearEscaneoAura = resetearEscaneoAura;
+
+        // ====================================================================
+        // 6. MÓDULO COACHING: 100% VIDEOLLAMADA ALEATORIA CON FAMOSOS
+        // ====================================================================
+        const videosCoaching = [
+            // Locomotora Oliveras
+            {
+                id: "loco_1",
+                coach: "Locomotora Oliveras",
+                especialidad: "Motivación Extrema & Dignidad",
+                emoji: "🥊",
+                frase: "¡¡DESPERTATE LOCO!! ¡¡SI QUERÉS QUE TE QUIERAN, QUERETE VOS PRIMERO!!",
+                youtubeId: "Ikxn0V3DykE"
+            },
+            {
+                id: "loco_2",
+                coach: "Locomotora Oliveras",
+                especialidad: "Furia Motivacional",
+                emoji: "🥊",
+                frase: "¡¡VALETE ORO, PAPÁ!! ¡¡EL QUE NO TE VALORA NO MERECE NI UN 'HOLA'!!",
+                youtubeId: "bHLXk_vNPpE"
+            },
+            {
+                id: "loco_3",
+                coach: "Locomotora Oliveras",
+                especialidad: "Defensa Personal Emocional",
+                emoji: "🥊",
+                frase: "¡¡NO TE ARRASTRES POR NADIE!! ¡¡LEVANTATE Y ANDÁ A ENTRENAR!!",
+                youtubeId: "qsIU0f-w51U"
+            },
+            // Gabriel Rolón
+            {
+                id: "rolon_1",
+                coach: "Gabriel Rolón",
+                especialidad: "Psicoanálisis & Soltar el Dolor",
+                emoji: "🛋️",
+                frase: "El deseo del otro no se puede obligar. Rogar amor no es amor, es una condena.",
+                youtubeId: "138uHAz6LHY"
+            },
+            {
+                id: "rolon_2",
+                coach: "Gabriel Rolón",
+                especialidad: "Psicología & Límites Afectivos",
+                emoji: "🛋️",
+                frase: "Aprender a perder a tiempo es la mayor victoria de la dignidad humana.",
+                youtubeId: "DrFLKXHJrVw"
+            },
+            {
+                id: "rolon_3",
+                coach: "Gabriel Rolón",
+                especialidad: "El Arte de Poner Distancia",
+                emoji: "🛋️",
+                frase: "No te quedes donde tengas que mendigar lo que debería ser espontáneo.",
+                youtubeId: "kSOBCN_aGro"
+            },
+            {
+                id: "rolon_4",
+                coach: "Gabriel Rolón",
+                especialidad: "Duelo y Recuperación del Yo",
+                emoji: "🛋️",
+                frase: "El duelo duele, pero la humillación destruye. Elegí el dolor que te sana.",
+                youtubeId: "Yf_MxVkz3rI"
+            },
+            // Momi Giardina
+            {
+                id: "momi_1",
+                coach: "Momi Giardina",
+                especialidad: "Realidad Cruda & Risas",
+                emoji: "💅",
+                frase: "¡Amor, date cuenta! Si no te escribe es porque NO QUIERE, corta la bocha.",
+                youtubeId: "KZdDnTsjwZc"
+            },
+            {
+                id: "momi_2",
+                coach: "Momi Giardina",
+                especialidad: "Humor & Descarte Inmediato",
+                emoji: "💅",
+                frase: "¡Basta de justificar boludos! Te clava el visto y vos armás una teoría de la NASA.",
+                youtubeId: "-ekLgAB2oFk"
+            },
+            {
+                id: "momi_3",
+                coach: "Momi Giardina",
+                especialidad: "Empoderamiento Sin Filtro",
+                emoji: "💅",
+                frase: "¡Reina, arreglate, salí con tus amigas y que se entere de lo que se perdió!",
+                youtubeId: "Jc-lvQ-3wR4"
+            }
+        ];
+
+        let videoActual = videosCoaching[0];
+        let llamadaEnCurso = false;
+        let timerInterval = null;
+        let segundosLlamada = 0;
+        let webcamStream = null;
+        let camaraEncendida = true;
+        let ytPlayer = null;
+
+        function seleccionarVideoAleatorio(excluirId = null) {
+            let disponibles = videosCoaching;
+            if (excluirId && videosCoaching.length > 1) {
+                disponibles = videosCoaching.filter(v => v.id !== excluirId);
+            }
+            const randomIndex = Math.floor(Math.random() * disponibles.length);
+            videoActual = disponibles[randomIndex];
+            actualizarInfoCoach();
+        }
+        window.seleccionarVideoAleatorio = seleccionarVideoAleatorio;
+
+        function cambiarCoachAleatorio() {
+            seleccionarVideoAleatorio(videoActual ? videoActual.id : null);
+            mostrarToast(`🎲 Llamada entrante de ${videoActual.coach}`);
+        }
+        window.cambiarCoachAleatorio = cambiarCoachAleatorio;
+
+        function cambiarSiguienteCoachAleatorio() {
+            seleccionarVideoAleatorio(videoActual ? videoActual.id : null);
+            reproducirVideoActual();
+            iniciarTimerLlamada();
+            mostrarToast(`🔄 Conectado con ${videoActual.coach}`);
+        }
+        window.cambiarSiguienteCoachAleatorio = cambiarSiguienteCoachAleatorio;
+
+        function actualizarInfoCoach() {
+            if (!videoActual) return;
+            const incName = document.getElementById('incoming-name');
+            const incSpec = document.getElementById('incoming-specialty');
+            const incAvatar = document.getElementById('incoming-avatar');
+            const incQuote = document.getElementById('incoming-quote');
+            const connName = document.getElementById('call-connected-name');
+
+            if (incName) incName.innerText = videoActual.coach;
+            if (incSpec) incSpec.innerText = videoActual.especialidad;
+            if (incAvatar) incAvatar.innerText = videoActual.emoji;
+            if (incQuote) incQuote.innerText = `"${videoActual.frase}"`;
+            if (connName) connName.innerText = videoActual.coach;
+        }
+
+        // ==========================================
+        // YOUTUBE PLAYER & AUTO-CORTE AL FINALIZAR
+        // ==========================================
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.ENDED === 0
+            if (event.data === 0) {
+                console.log("Video finalizado, cortando llamada automáticamente...");
+                colgarVideollamada(true);
+            }
+        }
+
+        // Fallback postMessage listener para capturar finalización del video cross-frame
+        window.addEventListener('message', function(event) {
+            try {
+                const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+                if (!data) return;
+                // Si el iframe de YouTube envía info=0 (video terminado) o onStateChange=0
+                if (data.event === "onStateChange" && data.info === 0) {
+                    if (llamadaEnCurso) colgarVideollamada(true);
+                } else if (data.info === 0 && (data.event === "infoDelivery" || !data.event)) {
+                    if (llamadaEnCurso) colgarVideollamada(true);
+                } else if (data.info && data.info.playerState === 0) {
+                    if (llamadaEnCurso) colgarVideollamada(true);
+                }
+            } catch (e) {}
+        });
+
+        function reproducirVideoActual() {
+            if (!videoActual) return;
+
+            // Si la API de YouTube está lista y el reproductor existe
+            if (ytPlayer && ytPlayer.loadVideoById) {
+                try {
+                    ytPlayer.loadVideoById({
+                        videoId: videoActual.youtubeId,
+                        startSeconds: 0
+                    });
+                    ytPlayer.playVideo();
+                    return;
+                } catch(e) {
+                    console.warn("Reinstanciando ytPlayer:", e);
+                }
+            }
+
+            // Si la API de YT está disponible creamos el reproductor
+            if (window.YT && window.YT.Player) {
+                try {
+                    ytPlayer = new YT.Player('call-youtube-player', {
+                        videoId: videoActual.youtubeId,
+                        width: '100%',
+                        height: '100%',
+                        playerVars: {
+                            autoplay: 1,
+                            controls: 1,
+                            playsinline: 1,
+                            rel: 0,
+                            modestbranding: 1,
+                            enablejsapi: 1,
+                            origin: window.location.origin
+                        },
+                        events: {
+                            'onReady': function(e) {
+                                e.target.playVideo();
+                            },
+                            'onStateChange': onPlayerStateChange
+                        }
+                    });
+                    return;
+                } catch(e) {
+                    console.warn("Fallo instanciando YT.Player:", e);
+                }
+            }
+
+            // Fallback iframe directo con enablejsapi si la API externa aún no cargó
+            const container = document.getElementById('call-youtube-player');
+            if (container) {
+                container.innerHTML = `
+                    <iframe id="call-yt-iframe"
+                        src="https://www.youtube-nocookie.com/embed/${videoActual.youtubeId}?autoplay=1&enablejsapi=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(window.location.origin)}"
+                        title="Videollamada Coaching"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen
+                        style="width:100%;height:100%;border:0;">
+                    </iframe>
+                `;
+            }
+        }
+
+        // ==========================================
+        // GESTIÓN DE CÁMARA WEB EN EL RECUADRO PIP
+        // ==========================================
+        async function activarCamaraWeb() {
+            const videoEl = document.getElementById('pip-webcam');
+            const fallbackEl = document.getElementById('pip-fallback');
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                if (videoEl) videoEl.classList.remove('active');
+                if (fallbackEl) fallbackEl.style.display = 'flex';
+                mostrarToast("ℹ️ Sin soporte de cámara web");
+                return;
+            }
+
+            try {
+                webcamStream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'user',
+                        width: { ideal: 480 },
+                        height: { ideal: 640 }
+                    },
+                    audio: false
+                });
+
+                if (videoEl) {
+                    videoEl.srcObject = webcamStream;
+                    await videoEl.play();
+                    videoEl.classList.add('active');
+                }
+                if (fallbackEl) fallbackEl.style.display = 'none';
+                camaraEncendida = true;
+                actualizarBotonCamara(true);
+            } catch (err) {
+                console.warn("Permiso de cámara denegado:", err);
+                if (videoEl) videoEl.classList.remove('active');
+                if (fallbackEl) fallbackEl.style.display = 'flex';
+                camaraEncendida = false;
+                actualizarBotonCamara(false);
+                mostrarToast("📷 Habilitá la cámara para verte en la llamada");
+            }
+        }
+
+        function apagarCamaraWeb() {
+            if (webcamStream) {
+                webcamStream.getTracks().forEach(track => track.stop());
+                webcamStream = null;
+            }
+
+            const videoEl = document.getElementById('pip-webcam');
+            if (videoEl) {
+                videoEl.srcObject = null;
+                videoEl.classList.remove('active');
+            }
+
+            const fallbackEl = document.getElementById('pip-fallback');
+            if (fallbackEl) {
+                fallbackEl.style.display = 'flex';
+            }
+
+            camaraEncendida = false;
+            actualizarBotonCamara(false);
+        }
+
+        function toggleCamara() {
+            if (webcamStream && webcamStream.getVideoTracks().length > 0) {
+                const track = webcamStream.getVideoTracks()[0];
+                track.enabled = !track.enabled;
+                camaraEncendida = track.enabled;
+                actualizarBotonCamara(track.enabled);
+                mostrarToast(track.enabled ? "📷 Cámara encendida" : "🚫 Cámara apagada");
+            } else {
+                activarCamaraWeb();
+            }
+        }
+        window.toggleCamara = toggleCamara;
+
+        function actualizarBotonCamara(encendida) {
+            const btn = document.getElementById('btn-call-camera');
+            if (btn) {
+                btn.innerText = encendida ? '📹' : '🚫';
+                btn.title = encendida ? 'Apagar cámara' : 'Encender cámara';
+            }
+        }
+
+        // ==========================================
+        // CONTROL DE VIDEOLLAMADA
+        // ==========================================
+        function iniciarVideollamada() {
+            llamadaEnCurso = true;
+
+            document.getElementById('call-idle-screen').classList.add('hidden');
+
+            reproducirVideoActual();
+            activarCamaraWeb();
+            iniciarTimerLlamada();
+            mostrarToast(`📞 Conectado con ${videoActual.coach}`);
+        }
+        window.iniciarVideollamada = iniciarVideollamada;
+
+        function colgarVideollamada(terminoVideo = false) {
+            llamadaEnCurso = false;
+            detenerTimerLlamada();
+
+            if (ytPlayer && ytPlayer.stopVideo) {
+                try { ytPlayer.stopVideo(); } catch(e){}
+            }
+
+            const fallbackFrame = document.getElementById('call-yt-iframe');
+            if (fallbackFrame) {
+                fallbackFrame.src = "";
+            }
+
+            apagarCamaraWeb();
+
+            document.getElementById('call-idle-screen').classList.remove('hidden');
+
+            if (terminoVideo) {
+                mostrarToast(`📞 ${videoActual.coach} cortó la llamada. ¡Tomá nota del consejo!`);
+            } else {
+                mostrarToast("Llamada finalizada");
+            }
+
+            // Seleccionar aleatoriamente el próximo video para la siguiente llamada
+            seleccionarVideoAleatorio(videoActual ? videoActual.id : null);
+        }
+        window.colgarVideollamada = colgarVideollamada;
+
+        function toggleMute() {
+            const btn = document.getElementById('btn-call-mute');
+            if (btn.innerText.includes('🎙️')) {
+                btn.innerText = '🔇';
+                mostrarToast("Micrófono silenciado");
+            } else {
+                btn.innerText = '🎙️';
+                mostrarToast("Micrófono activado");
+            }
+        }
+        window.toggleMute = toggleMute;
+
+        function iniciarTimerLlamada() {
+            detenerTimerLlamada();
+            segundosLlamada = 0;
+            const timerEl = document.getElementById('call-timer-display');
+            if (timerEl) timerEl.innerText = "00:00";
+
+            timerInterval = setInterval(() => {
+                segundosLlamada++;
+                const mins = String(Math.floor(segundosLlamada / 60)).padStart(2, '0');
+                const secs = String(segundosLlamada % 60).padStart(2, '0');
+                if (timerEl) timerEl.innerText = `${mins}:${secs}`;
+            }, 1000);
+        }
+
+        function detenerTimerLlamada() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        // ========================================================
+        // 7. BOTÓN DE PÁNICO Y CUENTA REGRESIVA
+        // ========================================================
+        let intervaloPanico = null;
+
+        function abrirAlertaPanico() {
+            const modal = document.getElementById('panic-modal');
+            const timerEl = document.getElementById('panic-timer');
+            const btnAbort = document.getElementById('panic-abort-btn');
+            
+            modal.classList.add('open');
+            let segs = 10;
+            timerEl.innerText = segs;
+            btnAbort.disabled = true;
+            btnAbort.innerText = `Esperá ${segs}s para no humillarte...`;
+
+            clearInterval(intervaloPanico);
+            intervaloPanico = setInterval(() => {
+                segs--;
+                if (segs > 0) {
+                    timerEl.innerText = segs;
+                    btnAbort.innerText = `Esperá ${segs}s para no humillarte...`;
+                } else {
+                    clearInterval(intervaloPanico);
+                    timerEl.innerText = "¡RESPIRÁSTE!";
+                    btnAbort.disabled = false;
+                    btnAbort.innerText = "✅ Salvaste tu dignidad (Cerrar)";
+                }
+            }, 1000);
+        }
+        window.abrirAlertaPanico = abrirAlertaPanico;
+
+        function cerrarAlertaPanico() {
+            clearInterval(intervaloPanico);
+            document.getElementById('panic-modal').classList.remove('open');
+            const navCoachingBtn = document.querySelectorAll('.nav-item')[3];
+            switchTab('screen-coaching', navCoachingBtn);
+        }
+        window.cerrarAlertaPanico = cerrarAlertaPanico;
+
+        // ========================================================
+        // 8. TOAST NOTIFICACIONES
+        // ========================================================
+        function mostrarToast(mensaje) {
+            const toast = document.getElementById('toast');
+            toast.innerText = mensaje;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+        window.mostrarToast = mostrarToast;
+
+        // ========================================================
+        // INICIALIZACIÓN
+        // ========================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            seleccionarVideoAleatorio();
+            generarShield();
+            ejecutarEscaneo();
+            inicializarRadarTactico();
+        });
+    </script>
+</body>
+</html>
