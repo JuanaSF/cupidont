@@ -3912,8 +3912,30 @@
         window.ejecutarEscaneo = ejecutarEscaneo;
 
         // ========================================================
-        // 3. MÓDULO CHAT PARSER
+        // 3. MÓDULO CHAT PARSER (CON GEMINI 2.5 FLASH + FALLBACK HARDCODEADO)
         // ========================================================
+        const SAMPLES_HARDCODEADOS = {
+            "uf colgué mal con el celu perdón, anduve a las corridas!": "<strong>⚠️ DIAGNÓSTICO:</strong> Desinterés activo con excusa genérica. Te tiene de suplente en el banco de relevos. Probabilidad de 'clavado de visto': 94%.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Respondé con un 'Tranqui, cero drama!' a las 6 horas y no preguntes nada más. Si hay interés real, que proponga fecha y hora.",
+            "jajaja de una, qué loco": "<strong>🧊 DIAGNÓSTICO:</strong> Respuesta de cotillón / Píldora de descarte. Cero inversión de esfuerzo. Si respondés rápido quedás como un desesperado.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Reaccioná con un pulgar arriba o dejalo morir ahí. Jamás le des respirador artificial a una conversación muerta.",
+            "sos re diferente a todos/as posta, me das una paz enorme": "<strong>🚨 DIAGNÓSTICO:</strong> Love bombing clásico o chamuyo industrial para inflarte el ego y después ghostearte. Procedé con chaleco antibalas.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Bajale el precio con un 'Jajaja gracias, igual recién nos conocemos'. Que demuestre con constancia real, no con piropos de cotillón.",
+            "te quiero un montón pero no quiero arruinar la amistad que tenemos": "<strong>🤝 DIAGNÓSTICO:</strong> Friendzone blindada con precinto de seguridad. Te quiere de terapeuta gratuito. No insistas ni regales atención.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Retirá la guardia psicológica 24/7. Decile 'Totalmente de acuerdo!' y direccioná tu energía hacia gente con intenciones claras."
+        };
+
+        function diagnosticoHardcodeado(rawTxt) {
+            const txt = (rawTxt || "").toLowerCase();
+            if (txt.includes("colgué") || txt.includes("colgue") || txt.includes("después vemos") || txt.includes("despues vemos") || txt.includes("ando a full")) {
+                return "<strong>⚠️ DIAGNÓSTICO:</strong> Desinterés activo con excusa genérica. Te tiene de suplente en el banco de relevos. Probabilidad de 'clavado de visto': 94%.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Respondé con un 'Tranqui, cero drama!' a las 6 horas y no preguntes nada más. Si hay interés real, que proponga fecha y hora.";
+            } else if (txt.includes("jaja") || txt.includes("jajaja") || txt.length < 6) {
+                return "<strong>🧊 DIAGNÓSTICO:</strong> Respuesta de cotillón / Píldora de descarte. Cero inversión de esfuerzo. Si respondés rápido quedás como un desesperado.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Reaccioná con un pulgar arriba o dejalo morir ahí. Jamás le des respirador artificial a una conversación muerta.";
+            } else if (txt.includes("sos re") || txt.includes("sos diferente") || txt.includes("nunca me pasó")) {
+                return "<strong>🚨 DIAGNÓSTICO:</strong> Love bombing clásico o chamuyo industrial para inflarte el ego y después ghostearte. Procedé con chaleco antibalas.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Bajale el precio con un 'Jajaja gracias, igual recién nos conocemos'. Que demuestre con constancia real, no con piropos de cotillón.";
+            } else if (txt.includes("amigo") || txt.includes("amistad") || txt.includes("arruinar")) {
+                return "<strong>🤝 DIAGNÓSTICO:</strong> Friendzone blindada con precinto de seguridad. Te quiere de terapeuta gratuito. No insistas ni regales atención.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Retirá la guardia psicológica 24/7. Decile 'Totalmente de acuerdo!' y direccioná tu energía hacia gente con intenciones claras.";
+            } else {
+                return "<strong>✔️ DIAGNÓSTICO:</strong> Mensaje neutro sin señales críticas inmediatas. No te hagas la cabeza antes de tiempo.<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> Mantené el mismo nivel de inversión y longitud. No regales stickers innecesarios ni audios de 3 minutos.";
+            }
+        }
+
         function cargarSampleChat(tipo) {
             const input = document.getElementById('input-chat');
             if (tipo === 'colgue') input.value = "Uf colgué mal con el celu perdón, anduve a las corridas!";
@@ -3924,22 +3946,47 @@
         }
         window.cargarSampleChat = cargarSampleChat;
 
-        function analizarChatApp() {
-            const txt = (document.getElementById('input-chat').value || "").trim().toLowerCase();
+        async function analizarChatApp() {
+            const rawVal = document.getElementById('input-chat').value || "";
+            const trimmed = rawVal.trim();
+            const lower = trimmed.toLowerCase();
             const res = document.getElementById('res-chat-app');
-            if(!txt) { 
-                res.innerText = "Ingresá un texto válido o pegá el chat."; 
-                return; 
+
+            if (!trimmed) {
+                res.innerText = "Ingresá un texto válido o pegá el chat.";
+                return;
             }
-            
-            if (txt.includes("colgué") || txt.includes("colgue") || txt.includes("después vemos") || txt.includes("despues vemos") || txt.includes("ando a full")) {
-                res.innerHTML = "<strong>⚠️ DIAGNÓSTICO:</strong> Desinterés activo con excusa genérica. Te tiene de suplente en el banco de relevos. Probabilidad de 'clavado de visto': 94%.";
-            } else if (txt.includes("jaja") || txt.includes("jajaja") || txt.length < 6) {
-                res.innerHTML = "<strong>🧊 DIAGNÓSTICO:</strong> Respuesta de cotillón / Píldora de descarte. Cero inversión de esfuerzo. Si respondés rápido quedás como un desesperado.";
-            } else if (txt.includes("sos re") || txt.includes("sos diferente") || txt.includes("nunca me pasó")) {
-                res.innerHTML = "<strong>🚨 DIAGNÓSTICO:</strong> Love bombing clásico o chamuyo industrial para inflarte el ego y después ghostearte. Procedé con chaleco antibalas.";
-            } else {
-                res.innerHTML = "<strong>✔️ DIAGNÓSTICO:</strong> Mensaje neutro. No regales stickers innecesarios ni audios de 3 minutos. Sé conciso/a.";
+
+            // Si es uno de los casos predefinidos hardcodeados, responder inmediatamente con el hardcodeado
+            if (SAMPLES_HARDCODEADOS[lower]) {
+                res.innerHTML = SAMPLES_HARDCODEADOS[lower];
+                return;
+            }
+
+            // Para mensajes nuevos ingresados por el usuario, analizamos con Gemini 2.5 Flash
+            res.innerHTML = '<span style="opacity:0.85;">⏳ Decodificando manipulación...</span>';
+
+            try {
+                const response = await fetch('/api/analyze-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: trimmed })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                if (data && data.subtexto_oculto && data.respuesta_tactica_sugerida) {
+                    res.innerHTML = `<strong>⚠️ DIAGNÓSTICO:</strong> ${data.subtexto_oculto}<br><br><strong>🛡️ TÁCTICA SUGERIDA:</strong> ${data.respuesta_tactica_sugerida}`;
+                    return;
+                }
+                throw new Error("Respuesta inválida del servidor");
+            } catch (err) {
+                console.warn("Fallo o indisponibilidad de Gemini API, usando respuesta hardcodeada:", err);
+                // Si la API no responde, se mantiene la respuesta táctica hardcodeada
+                res.innerHTML = diagnosticoHardcodeado(trimmed);
             }
         }
         window.analizarChatApp = analizarChatApp;
