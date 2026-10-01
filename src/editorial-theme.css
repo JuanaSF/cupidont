@@ -1175,6 +1175,30 @@ textarea:focus, select:focus, input[type="text"]:focus {
     border-color: rgba(255, 143, 163, 0.55) !important;
 }
 
+.aura-revealed-title-pill {
+    background: rgba(14, 10, 10, 0.92) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: var(--radius-full) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+    left: 0 !important;
+    right: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: fit-content !important;
+}
+
+.aura-pill-sparkle {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.aura-pill-title {
+    font-family: var(--font-serif) !important;
+    font-size: 1.02rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+}
+
 .btn-scan-trigger {
     background: var(--accent-primary-gradient) !important;
     border-radius: var(--radius-full) !important;
@@ -1186,20 +1210,23 @@ textarea:focus, select:focus, input[type="text"]:focus {
 
 .aura-result-card {
     background: rgba(14, 10, 10, 0.95) !important;
-    border: 1px solid var(--border-subtle) !important;
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg) !important;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85) !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
 }
 
 .aura-result-title {
     font-family: var(--font-serif) !important;
-    font-weight: 600 !important;
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
     letter-spacing: -0.01em !important;
+    margin: 0 !important;
+    line-height: 1.3 !important;
 }
 
 .aura-result-desc {
     font-family: var(--font-sans) !important;
-    font-size: 13px !important;
+    font-size: 13.5px !important;
     color: var(--text-secondary) !important;
     line-height: 1.55 !important;
 }

@@ -1872,7 +1872,7 @@
             position: relative;
             width: 100%;
             max-width: 360px;
-            height: 520px;
+            height: 440px;
             background: #030508;
             border-radius: 32px;
             border: 3px solid #1a2233;
@@ -1884,6 +1884,13 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+        }
+
+        @media (max-width: 480px) {
+            .aura-hud-container {
+                height: 410px;
+                border-radius: 28px;
+            }
         }
 
         #aura-camera-feed {
@@ -2181,35 +2188,84 @@
             transform: scale(0.96);
         }
 
-        /* TARJETA DE RESULTADO / DIAGNÓSTICO EN LA PARTE INFERIOR DE LA CÁMARA */
-        .aura-result-card {
+        /* PÍLDORA SUPERPUESTA CON ARQUETIPO (EN EL CENTRO DEL BORDE INFERIOR DEL VISOR) */
+        .aura-revealed-title-pill {
             display: none;
             position: absolute;
-            bottom: 12px;
-            left: 12px;
-            right: 12px;
-            max-height: 230px;
-            background: rgba(8, 12, 22, 0.92);
+            bottom: 14px;
+            left: 0 !important;
+            right: 0 !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            z-index: 12;
+            background: rgba(14, 10, 10, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 28px;
+            padding: 7px 18px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
+            animation: auraPillSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-align: center;
+            white-space: nowrap;
+            width: fit-content !important;
+            max-width: 85%;
+            pointer-events: none;
+        }
+
+        @keyframes auraPillSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .aura-revealed-title-pill.active {
+            display: flex;
+        }
+
+        .aura-pill-title {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+
+        /* TARJETA DE RESULTADO / DIAGNÓSTICO UBICADA MÁS ABAJO, FUERA DEL VISOR */
+        .aura-result-card {
+            display: none;
+            position: relative;
+            width: 100%;
+            max-width: 360px;
+            margin-top: 14px;
+            background: rgba(14, 10, 10, 0.95);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 14px 16px;
-            margin: 0;
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-            animation: auraSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            z-index: 15;
-            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 16px 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+            animation: auraSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            z-index: 10;
         }
 
         @keyframes auraSlideUp {
             from {
                 opacity: 0;
-                transform: translateY(24px) scale(0.96);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
 
@@ -2221,18 +2277,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
-        }
-
-        .aura-badge-type {
-            font-size: 0.82rem;
-            font-weight: 800;
-            letter-spacing: -0.2px;
-            padding: 3px 9px;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            text-transform: uppercase;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .aura-score-tag {
@@ -2240,22 +2288,31 @@
             font-size: 0.68rem;
             font-weight: 700;
             color: #94a3b8;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 3px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
         }
 
         .aura-result-title {
-            font-size: 1.05rem;
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
             font-weight: 800;
             color: #ffffff;
-            margin-bottom: 5px;
-            line-height: 1.25;
+            margin: 0;
+            line-height: 1.2;
             letter-spacing: -0.2px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .aura-result-desc {
-            font-size: 0.82rem;
+            font-size: 0.86rem;
             color: #cbd5e1;
-            line-height: 1.42;
-            margin-bottom: 12px;
+            line-height: 1.55;
+            margin-bottom: 14px;
         }
 
         .aura-result-actions {
@@ -2265,12 +2322,12 @@
 
         .btn-rescan {
             width: 100% !important;
-            padding: 9px 16px !important;
-            font-size: 0.85rem !important;
+            padding: 11px 18px !important;
+            font-size: 0.88rem !important;
             font-weight: 700 !important;
             background: rgba(255, 255, 255, 0.12) !important;
             border: 1px solid rgba(255, 255, 255, 0.25) !important;
-            border-radius: 12px !important;
+            border-radius: 30px !important;
             color: #fff !important;
             margin-bottom: 0 !important;
             display: flex;
@@ -2870,23 +2927,27 @@
                         </button>
                     </div>
 
-                    <!-- TARJETA DE RESULTADO / DIAGNÓSTICO DEL AURA (SUPERPUESTA EN LA CÁMARA) -->
-                    <div class="aura-result-card" id="aura-result-card">
-                        <div class="aura-result-header">
-                            <div class="aura-badge-type" id="aura-result-badge">😈 DIABLO</div>
-                            <div class="aura-score-tag" id="aura-result-freq">666 Hz • PELIGRO EXTREMO</div>
-                        </div>
-                        <div class="aura-result-title" id="aura-result-title">Aura Carmesí de Manipulación & Caos</div>
-                        <p class="aura-result-desc" id="aura-result-desc">
-                            Peligro inminente: Clava el visto 3 días, vuelve como si nada y te desestabiliza emocionalmente. Cero apego seguro.
-                        </p>
-                        <div class="aura-result-actions">
-                            <button class="btn-rescan" onclick="resetearEscaneoAura()">
-                                🔄 Escanear a Otra Persona
-                            </button>
-                        </div>
+                    <!-- PÍLDORA SUPERPUESTA CON ARQUETIPO (EN EL BORDE DEL VISOR SIN BLOQUEAR LA CARA) -->
+                    <div class="aura-revealed-title-pill" id="aura-revealed-title-pill">
+                        <span class="aura-pill-title" id="aura-pill-title">💎 FIEL</span>
                     </div>
 
+                </div>
+
+                <!-- TARJETA DE DIAGNÓSTICO DETALLADO (MÁS ABAJO, FUERA DEL VISOR PARA TOTAL VISIBILIDAD) -->
+                <div class="aura-result-card" id="aura-result-card">
+                    <div class="aura-result-header">
+                        <h3 class="aura-result-title" id="aura-result-title">Aura Zafiro de Lealtad Inquebrantable</h3>
+                        <div class="aura-score-tag" id="aura-result-freq">888 Hz • LEALTAD TOTAL</div>
+                    </div>
+                    <p class="aura-result-desc" id="aura-result-desc">
+                        Deja el celular boca arriba en la mesa sin una gota de sudor. No tiene chats archivados ni fotos en la papelera. Si está con vos, el resto del planeta es invisible.
+                    </p>
+                    <div class="aura-result-actions">
+                        <button class="btn-rescan" onclick="resetearEscaneoAura()">
+                            🔄 Escanear a Otra Persona
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -3952,7 +4013,8 @@
         const aurasDB = [
             {
                 id: "diablo",
-                badge: "😈 DIABLO / DIABLA",
+                nombre: "😈 DIABLO",
+                badge: "😈 DIABLO",
                 badgeColor: "#E63956",
                 freq: "666 Hz • PELIGRO EXTREMO",
                 titulo: "Aura Carmesí de Manipulación & Caos",
@@ -3963,7 +4025,8 @@
             },
             {
                 id: "toxico",
-                badge: "☣️ TÓXICO / TÓXICA RADIACTIVO",
+                nombre: "☣️ TÓXICO",
+                badge: "☣️ TÓXICO",
                 badgeColor: "#10B981",
                 freq: "999 mSv • ZONA DE EVACUACIÓN",
                 titulo: "Aura Verde Ácida de Reclamos Fantasma",
@@ -3974,7 +4037,8 @@
             },
             {
                 id: "angel",
-                badge: "😇 ÁNGEL / INOCENCIA RARA",
+                nombre: "😇 ÁNGEL",
+                badge: "😇 ÁNGEL",
                 badgeColor: "#F59E0B",
                 freq: "528 Hz • PUREZA CERTIFICADA",
                 titulo: "Aura Celestial de Responsabilidad Afectiva",
@@ -3985,7 +4049,8 @@
             },
             {
                 id: "pollera",
-                badge: "🐕 POLLERA SUPREMO",
+                nombre: "🐕 POLLERA",
+                badge: "🐕 POLLERA",
                 badgeColor: "#D1495B",
                 freq: "0.0 Hz • SIN AUTONOMÍA",
                 titulo: "Aura Rosa Chicle de Sumisión Total",
@@ -3996,13 +4061,14 @@
             },
             {
                 id: "fiel",
-                badge: "💎 FIEL & LEAL / CÓDIGO DE HONOR",
-                badgeColor: "#E64A62",
+                nombre: "💎 FIEL",
+                badge: "💎 FIEL",
+                badgeColor: "#00D2FF",
                 freq: "888 Hz • LEALTAD TOTAL",
                 titulo: "Aura Zafiro de Lealtad Inquebrantable",
                 descripcion: "Deja el celular boca arriba en la mesa sin una gota de sudor. No tiene chats archivados ni fotos en la papelera. Si está con vos, el resto del planeta es invisible.",
-                auraEdgeColor: "rgba(230, 74, 98, 0.42)",
-                auraOuterColor: "rgba(242, 84, 109, 0.12)",
+                auraEdgeColor: "rgba(0, 210, 255, 0.48)",
+                auraOuterColor: "rgba(14, 165, 233, 0.18)",
                 propType: "crown"
             }
         ];
@@ -4386,9 +4452,13 @@
             const hudBottom = document.getElementById('aura-hud-bottom');
             const btnTrigger = document.getElementById('btn-scan-trigger');
             const resultCard = document.getElementById('aura-result-card');
+            const titlePill = document.getElementById('aura-revealed-title-pill');
+            const reticle = document.getElementById('aura-target-reticle');
 
             if (overlay) overlay.classList.add('scanning');
             if (resultCard) resultCard.classList.remove('active');
+            if (titlePill) titlePill.classList.remove('active');
+            if (reticle) reticle.style.display = 'block';
             if (hudBottom) hudBottom.style.display = 'none';
             if (btnTrigger) btnTrigger.style.display = 'none';
 
@@ -4436,7 +4506,25 @@
             const overlay = document.getElementById('aura-scan-overlay');
             if (overlay) overlay.classList.remove('scanning');
 
-            const badgeEl = document.getElementById('aura-result-badge');
+            // 1. Ocultar la retícula central para que el rostro y cuerpo queden 100% despejados
+            const reticle = document.getElementById('aura-target-reticle');
+            if (reticle) reticle.style.display = 'none';
+
+            // 2. Mostrar la píldora compacta centrada en el visor con las letras en el color del aura
+            const titlePill = document.getElementById('aura-revealed-title-pill');
+            const pillTitle = document.getElementById('aura-pill-title');
+            if (pillTitle) {
+                pillTitle.innerText = auraActual.nombre;
+                pillTitle.style.color = auraActual.badgeColor;
+                pillTitle.style.textShadow = `0 0 14px ${auraActual.auraEdgeColor}`;
+            }
+            if (titlePill) {
+                titlePill.style.borderColor = auraActual.badgeColor;
+                titlePill.style.boxShadow = `0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px ${auraActual.auraEdgeColor}`;
+                titlePill.classList.add('active');
+            }
+
+            // 3. Desplegar la tarjeta de diagnóstico con el título del aura ("Aura Zafiro...") en blanco original y abajo la explicación
             const freqEl = document.getElementById('aura-result-freq');
             const titleEl = document.getElementById('aura-result-title');
             const descEl = document.getElementById('aura-result-desc');
@@ -4445,30 +4533,38 @@
 
             if (hudBottom) hudBottom.style.display = 'none';
 
-            if (badgeEl) {
-                badgeEl.innerText = auraActual.badge;
-                badgeEl.style.color = auraActual.badgeColor;
-                badgeEl.style.borderColor = auraActual.badgeColor;
-                badgeEl.style.boxShadow = `0 0 14px ${auraActual.auraEdgeColor}`;
+            if (titleEl) {
+                titleEl.innerText = auraActual.titulo;
+                titleEl.style.color = '#ffffff';
+                titleEl.style.textShadow = 'none';
             }
-            if (freqEl) freqEl.innerText = auraActual.freq;
-            if (titleEl) titleEl.innerText = auraActual.titulo;
-            if (descEl) descEl.innerText = auraActual.descripcion;
+            if (freqEl) {
+                freqEl.innerText = auraActual.freq;
+            }
+            if (descEl) {
+                descEl.innerText = auraActual.descripcion;
+            }
 
             if (resultCard) {
+                resultCard.style.borderColor = auraActual.badgeColor;
+                resultCard.style.boxShadow = `0 16px 40px rgba(0, 0, 0, 0.85), 0 0 24px ${auraActual.auraOuterColor}`;
                 resultCard.classList.add('active');
             }
 
-            mostrarToast(`👁️ Aura detectada: ${auraActual.badge}`);
+            mostrarToast(`👁️ Aura detectada: ${auraActual.nombre}`);
         }
 
         function resetearEscaneoAura() {
             auraState = "idle";
+            const reticle = document.getElementById('aura-target-reticle');
+            const titlePill = document.getElementById('aura-revealed-title-pill');
             const resultCard = document.getElementById('aura-result-card');
             const hudBottom = document.getElementById('aura-hud-bottom');
             const btnTrigger = document.getElementById('btn-scan-trigger');
             const overlay = document.getElementById('aura-scan-overlay');
 
+            if (reticle) reticle.style.display = 'block';
+            if (titlePill) titlePill.classList.remove('active');
             if (resultCard) resultCard.classList.remove('active');
             if (overlay) overlay.classList.remove('scanning');
             if (hudBottom) hudBottom.style.display = 'flex';
